@@ -401,7 +401,7 @@ class _InvoiceState extends State<Invoice> {
                       ),
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 50,
                     ),
                     Row()
                   ],
