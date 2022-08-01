@@ -79,7 +79,10 @@
      "company": "شركة",
      "description": "وصف",
      "filetypes" : "إرفاق الملفات (jpg، png، jpeg) 02 فقط",
-     "allfields": "يرجى تقديم جميع الحقول"
+     "allfields": "يرجى تقديم جميع الحقول",
+     "update": "تحديث",
+     "updateLanguage": "لغة",
+     "gender": "جنس"
      
 
 

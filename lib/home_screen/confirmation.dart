@@ -1,4 +1,9 @@
+import 'dart:io';
+
+import 'package:dotted_border/dotted_border.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:seller_side/widgets/alert.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import '../widgets/app_button.dart';
@@ -13,8 +18,11 @@ class Confirmation extends StatefulWidget {
 
 class _ConfirmationState extends State<Confirmation> {
   bool visible = false;
+  List<File?> img = [];
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -152,6 +160,151 @@ class _ConfirmationState extends State<Confirmation> {
                 height: 20.0,
               ),
               Row(
+                children: [
+                  SizedBox(
+                    width: width * 0.05,
+                  ),
+                  Container(
+                    height: 60,
+                    width: 60,
+                    margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(12)),
+                      child: DottedBorder(
+                        color: const Color(0xFF128383),
+                        borderType: BorderType.RRect,
+                        radius: const Radius.circular(12),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Center(
+                                  child: IconButton(
+                                onPressed: () async {
+                                  await Permission.photos.request();
+
+                                  var permissionStatus = await Permission.photos.status;
+                                  if (permissionStatus.isGranted) {
+                                    final images = await FilePicker.platform.pickFiles(
+                                      allowMultiple: true,
+                                      type: FileType.custom,
+                                      allowedExtensions: ['jpg', 'jpeg', 'png'],
+                                    );
+                                    if (images == null) {
+                                      return;
+                                    }
+                                    setState(() {
+                                      img = images.paths.map((path) => File(path!)).toList();
+                                    });
+                                  } else {
+                                    _showMsg(
+                                        'Can not access your gallery',
+                                        const Icon(
+                                          Icons.close,
+                                          color: Colors.red,
+                                        ));
+                                  }
+                                },
+                                icon: const Icon(Icons.attach_file),
+                              )),
+                            ),
+                            Expanded(
+                              child: Center(child: Text(AppLocalizations.of(context)!.attach)),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: width * 0.03,
+                  ),
+                  Stack(
+                    children: [
+                      Container(
+                        height: 60,
+                        width: 60,
+                        margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.all(Radius.circular(12)),
+                          child: img.isNotEmpty
+                              ? Image.file(
+                                  img[0]!,
+                                  fit: BoxFit.fill,
+                                )
+                              : Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(Radius.circular(12)),
+                                    color: const Color(0xFF128383).withOpacity(0.15),
+                                  ),
+                                ),
+                        ),
+                      ),
+                      Positioned(
+                          bottom: 0,
+                          left: 35,
+                          top: 45,
+                          right: 0,
+                          child: IconButton(
+                              onPressed: () {
+                                if (img.isNotEmpty) {
+                                  setState(() {
+                                    img.removeAt(0);
+                                  });
+                                }
+                              },
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              )))
+                    ],
+                  ),
+                  SizedBox(
+                    width: width * 0.03,
+                  ),
+                  Stack(
+                    children: [
+                      Container(
+                        height: 60,
+                        width: 60,
+                        margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.all(Radius.circular(12)),
+                          child: img.length > 1
+                              ? Image.file(
+                                  img[1]!,
+                                  fit: BoxFit.fill,
+                                )
+                              : Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(Radius.circular(12)),
+                                    color: const Color(0xFF128383).withOpacity(0.15),
+                                  ),
+                                ),
+                        ),
+                      ),
+                      Positioned(
+                          bottom: 0,
+                          left: 35,
+                          top: 45,
+                          right: 0,
+                          child: IconButton(
+                              onPressed: () {
+                                if (img.length > 1) {
+                                  setState(() {
+                                    img.removeAt(1);
+                                  });
+                                }
+                              },
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              )))
+                    ],
+                  )
+                ],
+              ),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
@@ -179,5 +332,24 @@ class _ConfirmationState extends State<Confirmation> {
         ),
       ),
     ));
+  }
+
+  _showMsg(String msg, Icon icon) {
+    final snackBar = SnackBar(
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Text(
+              msg,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          icon
+        ],
+      ),
+      duration: const Duration(seconds: 2),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

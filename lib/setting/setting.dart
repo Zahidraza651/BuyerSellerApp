@@ -13,6 +13,7 @@ import 'package:toggle_switch/toggle_switch.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:http/http.dart' as http;
 import '../constants.dart';
+import '../edit_profile/edit_profile.dart';
 
 class SettingScreen extends StatefulWidget {
   final UserData userData;
@@ -73,13 +74,26 @@ class _SettingScreenState extends State<SettingScreen> {
               ],
             ),
             widget.userData.user!.photo != null
-                ? CircleAvatar(
-                    radius: 40.0,
-                    backgroundImage: NetworkImage(widget.userData.user!.photo),
+                ? InkWell(
+                    child: CircleAvatar(
+                      radius: 40.0,
+                      backgroundImage: NetworkImage(widget.userData.user!.photo),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Update_User(
+                                    userData: widget.userData,
+                                  )));
+                    },
                   )
-                : const CircleAvatar(
-                    radius: 40.0,
-                    backgroundImage: AssetImage('assets/imagegirl.png'),
+                : InkWell(
+                    child: const CircleAvatar(
+                      radius: 40.0,
+                      backgroundImage: AssetImage('assets/imagegirl.png'),
+                    ),
+                    onTap: () {},
                   ),
             Text(widget.userData.user!.name.toString()),
             Container(
