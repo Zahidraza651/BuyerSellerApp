@@ -12,7 +12,7 @@ import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:seller_side/widgets/loader.dart';
 import '../widgets/app_button.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 
 class RegisterData extends StatefulWidget {
@@ -176,12 +176,12 @@ class _RegisterDataState extends State<RegisterData> {
 
                           var permissionStatus = await Permission.photos.status;
                           if (permissionStatus.isGranted) {
-                            final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+                            final image = await FilePicker.platform.pickFiles();
                             if (image == null) {
                               return;
                             }
                             setState(() {
-                              img = File(image.path);
+                              img = File(image.files.single.path!);
                             });
                           } else {
                             _showMsg(

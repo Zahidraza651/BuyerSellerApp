@@ -79,6 +79,9 @@
      "accepted": "Accepted",
      "files" : "Files",
      "attach": "Attach",
-     "company": "Company"
+     "company": "Company",
+     "description": "Description",
+     "filetypes" : "Attach files(jpg, png, jpeg) 02 only",
+     "allfields": "Please provide all fields"
      
 }

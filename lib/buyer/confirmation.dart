@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class BuyerConfirmation extends StatefulWidget {
@@ -15,7 +15,7 @@ class BuyerConfirmation extends StatefulWidget {
 
 class _BuyerConfirmationState extends State<BuyerConfirmation> {
   bool _changeState = true;
-  File? img;
+  List<File?> img = [];
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -63,7 +63,8 @@ class _BuyerConfirmationState extends State<BuyerConfirmation> {
                     width: width * 0.42,
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: _changeState == true ? Color(0xFF383838) : Color(0xFFE3E1E1),
+                          primary:
+                              _changeState == true ? const Color(0xFF383838) : const Color(0xFFE3E1E1),
                         ),
                         onPressed: () {
                           setState(() {
@@ -73,7 +74,7 @@ class _BuyerConfirmationState extends State<BuyerConfirmation> {
                         child: Text(
                           AppLocalizations.of(context)!.byHand, //Credit Card",
                           style: TextStyle(
-                            color: _changeState == true ? Colors.white : Color(0xFF969696),
+                            color: _changeState == true ? Colors.white : const Color(0xFF969696),
                             fontFamily: 'Roboto',
                           ),
                         )),
@@ -85,7 +86,8 @@ class _BuyerConfirmationState extends State<BuyerConfirmation> {
                     width: width * 0.42,
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            primary: _changeState == true ? Color(0xFFE3E1E1) : Color(0xFF383838),
+                            primary:
+                                _changeState == true ? const Color(0xFFE3E1E1) : const Color(0xFF383838),
                             elevation: 0),
                         onPressed: () {
                           setState(() {
@@ -96,7 +98,7 @@ class _BuyerConfirmationState extends State<BuyerConfirmation> {
                           AppLocalizations.of(context)!.byPost, //"Wallet",
                           style: TextStyle(
                               fontFamily: 'Roboto',
-                              color: _changeState == true ? Color(0xFF969696) : Colors.white),
+                              color: _changeState == true ? const Color(0xFF969696) : Colors.white),
                         )),
                   ),
                 ],
@@ -129,8 +131,8 @@ class _BuyerConfirmationState extends State<BuyerConfirmation> {
                   borderRadius: BorderRadius.circular(70),
                   color: const Color(0xFFE3E2E2),
                 ),
-                child: TextField(
-                  decoration: const InputDecoration(
+                child: const TextField(
+                  decoration: InputDecoration(
                     contentPadding: EdgeInsets.all(15),
                     border: InputBorder.none,
                   ),
@@ -163,8 +165,8 @@ class _BuyerConfirmationState extends State<BuyerConfirmation> {
                   borderRadius: BorderRadius.circular(70),
                   color: const Color(0xFFE3E2E2),
                 ),
-                child: TextField(
-                  decoration: const InputDecoration(
+                child: const TextField(
+                  decoration: InputDecoration(
                     contentPadding: EdgeInsets.all(15),
                     border: InputBorder.none,
                   ),
@@ -191,44 +193,52 @@ class _BuyerConfirmationState extends State<BuyerConfirmation> {
                   width: width * 0.05,
                 ),
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.08,
-                  width: MediaQuery.of(context).size.width * 0.16,
+                  height: 60,
+                  width: 60,
                   margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
                     child: DottedBorder(
-                      color: Color(0xFF128383),
+                      color: const Color(0xFF128383),
                       borderType: BorderType.RRect,
-                      radius: Radius.circular(12),
+                      radius: const Radius.circular(12),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Center(
-                              child: IconButton(
-                            onPressed: () async {
-                              await Permission.photos.request();
+                          Expanded(
+                            child: Center(
+                                child: IconButton(
+                              onPressed: () async {
+                                await Permission.photos.request();
 
-                              var permissionStatus = await Permission.photos.status;
-                              if (permissionStatus.isGranted) {
-                                final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-                                if (image == null) {
-                                  return;
+                                var permissionStatus = await Permission.photos.status;
+                                if (permissionStatus.isGranted) {
+                                  final images = await FilePicker.platform.pickFiles(
+                                    allowMultiple: true,
+                                    type: FileType.custom,
+                                    allowedExtensions: ['jpg', 'jpeg', 'png'],
+                                  );
+                                  if (images == null) {
+                                    return;
+                                  }
+                                  setState(() {
+                                    img = images.paths.map((path) => File(path!)).toList();
+                                  });
+                                } else {
+                                  _showMsg(
+                                      'Can not access your gallery',
+                                      const Icon(
+                                        Icons.close,
+                                        color: Colors.red,
+                                      ));
                                 }
-                                setState(() {
-                                  img = File(image.path);
-                                });
-                              } else {
-                                _showMsg(
-                                    'Can not access your gallery',
-                                    Icon(
-                                      Icons.close,
-                                      color: Colors.red,
-                                    ));
-                              }
-                            },
-                            icon: const Icon(Icons.attach_file),
-                          )),
-                          Center(child: Text(AppLocalizations.of(context)!.attach)),
+                              },
+                              icon: const Icon(Icons.attach_file),
+                            )),
+                          ),
+                          Expanded(
+                            child: Center(child: Text(AppLocalizations.of(context)!.attach)),
+                          )
                         ],
                       ),
                     ),
@@ -237,42 +247,89 @@ class _BuyerConfirmationState extends State<BuyerConfirmation> {
                 SizedBox(
                   width: width * 0.03,
                 ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.08,
-                  width: MediaQuery.of(context).size.width * 0.16,
-                  margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                    child: img != null
-                        ? Image.file(
-                            img!,
-                            fit: BoxFit.fill,
-                          )
-                        : Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(12)),
-                              color: Color(0xFF128383).withOpacity(0.15),
-                            ),
-                          ),
-                  ),
+                Stack(
+                  children: [
+                    Container(
+                      height: 60,
+                      width: 60,
+                      margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.all(Radius.circular(12)),
+                        child: img.isNotEmpty
+                            ? Image.file(
+                                img[0]!,
+                                fit: BoxFit.fill,
+                              )
+                            : Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(Radius.circular(12)),
+                                  color: const Color(0xFF128383).withOpacity(0.15),
+                                ),
+                              ),
+                      ),
+                    ),
+                    Positioned(
+                        bottom: 0,
+                        left: 35,
+                        top: 45,
+                        right: 0,
+                        child: IconButton(
+                            onPressed: () {
+                              if (img.isNotEmpty) {
+                                setState(() {
+                                  img.removeAt(0);
+                                });
+                              }
+                            },
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            )))
+                  ],
                 ),
                 SizedBox(
                   width: width * 0.03,
                 ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.08,
-                  width: MediaQuery.of(context).size.width * 0.16,
-                  margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                        color: Color(0xFF128383).withOpacity(0.15),
+                Stack(
+                  children: [
+                    Container(
+                      height: 60,
+                      width: 60,
+                      margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.all(Radius.circular(12)),
+                        child: img.length > 1
+                            ? Image.file(
+                                img[1]!,
+                                fit: BoxFit.fill,
+                              )
+                            : Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(Radius.circular(12)),
+                                  color: const Color(0xFF128383).withOpacity(0.15),
+                                ),
+                              ),
                       ),
                     ),
-                  ),
-                ),
+                    Positioned(
+                        bottom: 0,
+                        left: 35,
+                        top: 45,
+                        right: 0,
+                        child: IconButton(
+                            onPressed: () {
+                              if (img.length > 1) {
+                                setState(() {
+                                  img.removeAt(1);
+                                });
+                              }
+                            },
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            )))
+                  ],
+                )
               ],
             ),
             Container(
@@ -330,28 +387,28 @@ showAlertDialog(BuildContext context) {
       alignment: Alignment.topCenter,
       child: Text(
         AppLocalizations.of(context)!.messages,
-        style: TextStyle(
+        style: const TextStyle(
             fontFamily: 'Roboto', fontWeight: FontWeight.bold, fontSize: 20, color: Color(0xFF383838)),
       ),
     ),
-    content: Container(
+    content: SizedBox(
       height: 80,
       child: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Text(
-            'Description',
+            AppLocalizations.of(context)!.description,
             textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: 'Roboto', fontSize: 16, color: Color(0xFF969696)),
+            style: const TextStyle(fontFamily: 'Roboto', fontSize: 16, color: Color(0xFF969696)),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Text(
             AppLocalizations.of(context)!.invoice34,
-            style: TextStyle(fontFamily: 'Roboto', fontSize: 16, color: Color(0xFF1BA9E4)),
+            style: const TextStyle(fontFamily: 'Roboto', fontSize: 16, color: const Color(0xFF1BA9E4)),
           ),
         ],
       ),
@@ -359,15 +416,16 @@ showAlertDialog(BuildContext context) {
     actions: [
       Container(
         width: 400,
-        margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
+        margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
         child: ElevatedButton(
-            child: Text(
+            child: const Text(
               'Share Invoice Number',
-              style: TextStyle(fontFamily: 'Roboto', fontSize: 14, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontFamily: 'Roboto', fontSize: 14, fontWeight: FontWeight.bold),
             ),
             style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(70))),
-              primary: Color(0xFF128383),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: const BorderRadius.all(Radius.circular(70))),
+              primary: const Color(0xFF128383),
             ),
             onPressed: () {}),
       ),

@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:seller_side/constants.dart';
 import 'package:seller_side/models/request.dart';
@@ -22,7 +22,8 @@ class NewRequest extends StatefulWidget {
 }
 
 class _NewRequestState extends State<NewRequest> {
-  File? img;
+  List<File?> img = [];
+  var imgPaths = [];
   bool isLoading = false;
   TextEditingController itemtype = TextEditingController();
   TextEditingController price = TextEditingController();
@@ -36,19 +37,29 @@ class _NewRequestState extends State<NewRequest> {
   Future makeNewRequest() async {
     setState(() => isLoading = true);
     var token = widget.userData.token;
-    final response = await http.post(
-      Uri.parse(
-          '$baseUrl/create_request?item_type=${itemtype.text}&price=${price.text}&details=${detail.text}'),
-      headers: {
-        // 'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
+    Map<String, String> headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    var request = http.MultipartRequest('POST', Uri.parse('$baseUrl/create_request'));
+    request.fields['item_type'] = itemtype.text;
+    request.fields['price'] = price.text;
+    request.fields['details'] = detail.text;
+    request.headers.addAll(headers);
+    if (img.isNotEmpty) {
+      if (img.length == 1) {
+        request.files.add(await http.MultipartFile.fromPath('photo[0]', img[0]!.path));
+      } else if (img.length > 1) {
+        request.files.add(await http.MultipartFile.fromPath('photo[0]', img[0]!.path));
+        request.files.add(await http.MultipartFile.fromPath('photo[1]', img[1]!.path));
+      }
+    }
+    final response = await request.send();
     setState(() => isLoading = false);
     if (response.statusCode == 200) {
-      Request newReq = Request.fromJson(jsonDecode(response.body));
-      // ignore: use_build_context_synchronously
+      final res = jsonDecode(String.fromCharCodes(await response.stream.toBytes()));
+      Request newReq = Request.fromJson(res);
+      //ignore: use_build_context_synchronously
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -215,7 +226,7 @@ class _NewRequestState extends State<NewRequest> {
                                     MediaQuery.of(context).size.width * 0.05,
                                     0),
                                 child: Text(
-                                  AppLocalizations.of(context)!.details, //"Details",
+                                  AppLocalizations.of(context)!.filetypes, //"Details",
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontFamily: 'Roboto',
@@ -227,51 +238,62 @@ class _NewRequestState extends State<NewRequest> {
                                   width: width * 0.05,
                                 ),
                                 Container(
-                                  height: MediaQuery.of(context).size.height * 0.08,
-                                  width: MediaQuery.of(context).size.width * 0.16,
+                                  height: 60,
+                                  width: 60,
                                   margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                                    borderRadius: const BorderRadius.all(const Radius.circular(12)),
                                     child: DottedBorder(
-                                      color: Color(0xFF128383),
+                                      color: const Color(0xFF128383),
                                       borderType: BorderType.RRect,
-                                      radius: Radius.circular(12),
+                                      radius: const Radius.circular(12),
                                       child: Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          Center(
-                                            child: IconButton(
-                                              icon: Icon(Icons.attach_file),
-                                              color: Color(0xFF128383),
-                                              onPressed: () async {
-                                                await Permission.photos.request();
+                                          Expanded(
+                                            child: Center(
+                                              child: IconButton(
+                                                icon: const Icon(Icons.attach_file),
+                                                color: const Color(0xFF128383),
+                                                onPressed: () async {
+                                                  await Permission.photos.request();
 
-                                                var permissionStatus = await Permission.photos.status;
-                                                if (permissionStatus.isGranted) {
-                                                  final image = await ImagePicker()
-                                                      .pickImage(source: ImageSource.gallery);
-                                                  if (image == null) {
-                                                    return;
+                                                  var permissionStatus = await Permission.photos.status;
+                                                  if (permissionStatus.isGranted) {
+                                                    FilePickerResult? images =
+                                                        await FilePicker.platform.pickFiles(
+                                                      allowMultiple: true,
+                                                      type: FileType.custom,
+                                                      allowedExtensions: ['jpg', 'jpeg', 'png'],
+                                                    );
+                                                    if (images == null) {
+                                                      return;
+                                                    } else {
+                                                      setState(() {
+                                                        img = images.paths
+                                                            .map((path) => File(path!))
+                                                            .toList();
+                                                      });
+                                                    }
+                                                  } else {
+                                                    _showMsg(
+                                                        'cant access your gallery',
+                                                        const Icon(
+                                                          Icons.close,
+                                                          color: Colors.red,
+                                                        ));
                                                   }
-                                                  setState(() {
-                                                    img = File(image.path);
-                                                  });
-                                                } else {
-                                                  _showMsg(
-                                                      'cant access your gallery',
-                                                      const Icon(
-                                                        Icons.close,
-                                                        color: Colors.red,
-                                                      ));
-                                                }
-                                              },
+                                                },
+                                              ),
                                             ),
                                           ),
-                                          Center(
-                                              child: Text(
-                                            AppLocalizations.of(context)!.attach,
-                                            style: TextStyle(color: Color(0xFF128383)),
-                                          )),
+                                          Expanded(
+                                            child: Center(
+                                                child: Text(
+                                              AppLocalizations.of(context)!.attach,
+                                              style: const TextStyle(color: const Color(0xFF128383)),
+                                            )),
+                                          )
                                         ],
                                       ),
                                     ),
@@ -280,42 +302,91 @@ class _NewRequestState extends State<NewRequest> {
                                 SizedBox(
                                   width: width * 0.03,
                                 ),
-                                Container(
-                                  height: MediaQuery.of(context).size.height * 0.08,
-                                  width: MediaQuery.of(context).size.width * 0.16,
-                                  margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                                    child: img != null
-                                        ? Image.file(
-                                            img!,
-                                            fit: BoxFit.fill,
-                                          )
-                                        : Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(Radius.circular(12)),
-                                              color: Color(0xFF128383).withOpacity(0.15),
-                                            ),
-                                          ),
-                                  ),
+                                Stack(
+                                  children: [
+                                    Container(
+                                      height: 60,
+                                      width: 60,
+                                      margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.all(Radius.circular(12)),
+                                        child: img.isNotEmpty
+                                            ? Image.file(
+                                                img[0]!,
+                                                fit: BoxFit.fill,
+                                              )
+                                            : Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      const BorderRadius.all(const Radius.circular(12)),
+                                                  color: const Color(0xFF128383).withOpacity(0.15),
+                                                ),
+                                              ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                        bottom: 0,
+                                        left: 35,
+                                        top: 45,
+                                        right: 0,
+                                        child: IconButton(
+                                            onPressed: () {
+                                              if (img.isNotEmpty) {
+                                                setState(() {
+                                                  img.removeAt(0);
+                                                });
+                                              }
+                                            },
+                                            icon: const Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
+                                            )))
+                                  ],
                                 ),
                                 SizedBox(
                                   width: width * 0.03,
                                 ),
-                                Container(
-                                  height: MediaQuery.of(context).size.height * 0.08,
-                                  width: MediaQuery.of(context).size.width * 0.16,
-                                  margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                                        color: Color(0xFF128383).withOpacity(0.15),
+                                Stack(
+                                  children: [
+                                    Container(
+                                      height: 60,
+                                      width: 60,
+                                      margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.all(Radius.circular(12)),
+                                        child: img.length > 1
+                                            ? Image.file(
+                                                img[1]!,
+                                                fit: BoxFit.fill,
+                                              )
+                                            : Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      const BorderRadius.all(Radius.circular(12)),
+                                                  color: const Color(0xFF128383).withOpacity(0.15),
+                                                ),
+                                              ),
                                       ),
                                     ),
-                                  ),
-                                ),
+                                    Positioned(
+                                        bottom: 0,
+                                        left: 35,
+                                        top: 45,
+                                        right: 0,
+                                        child: IconButton(
+                                            onPressed: () {
+                                              if (img.length > 1) {
+                                                setState(() {
+                                                  img.removeAt(1);
+                                                });
+                                              }
+                                            },
+                                            icon: const Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
+                                            )))
+                                  ],
+                                )
                               ],
                             ),
                             Container(
@@ -338,7 +409,7 @@ class _NewRequestState extends State<NewRequest> {
                                     makeNewRequest();
                                   } else {
                                     _showMsg(
-                                        'Please provide all fields',
+                                        AppLocalizations.of(context)!.allfields,
                                         const Icon(
                                           Icons.close,
                                           color: Colors.red,

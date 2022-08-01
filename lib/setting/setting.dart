@@ -24,7 +24,9 @@ class SettingScreen extends StatefulWidget {
 
 class _SettingScreenState extends State<SettingScreen> {
   bool isLoading = false;
+  int labelindex = 0; //language switch index
 
+//logging out
   Future logOut() async {
     setState(() => isLoading = true);
     var token = widget.userData.token;
@@ -122,19 +124,26 @@ class _SettingScreenState extends State<SettingScreen> {
                                   activeFgColor: Colors.white,
                                   inactiveBgColor: Colors.grey[100],
                                   inactiveFgColor: Colors.black,
-                                  initialLabelIndex: 0,
+                                  initialLabelIndex: labelindex,
                                   totalSwitches: 2,
                                   labels: const ['Eng', 'العربية'],
                                   radiusStyle: true,
-                                  onToggle: (index) {
+                                  onToggle: (index) async {
+                                    SharedPreferences localstorage =
+                                        await SharedPreferences.getInstance();
+                                    // ignore: use_build_context_synchronously
                                     final provider = Provider.of<LocaleProvider>(context, listen: false);
                                     if (index == 0) {
                                       setState(() {
                                         provider.setLocale(const Locale('en'));
+                                        labelindex = 0;
+                                        localstorage.setString('lang', 'en');
                                       });
                                     } else {
                                       setState(() {
                                         provider.setLocale(const Locale('ar'));
+                                        labelindex = 1;
+                                        localstorage.setString('lang', 'ar');
                                       });
                                     }
                                   },

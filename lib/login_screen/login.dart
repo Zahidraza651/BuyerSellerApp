@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:seller_side/constants.dart';
 import 'package:seller_side/models/user.dart';
 import 'package:seller_side/post_login/welcome.dart';
+import 'package:seller_side/provider/local_provider.dart';
 import 'package:seller_side/register_screen/registration.dart';
 import 'package:seller_side/widgets/app_button.dart';
 import 'package:seller_side/widgets/app_textfield.dart';
@@ -69,10 +71,24 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  //getting saved language by default
+
+  getLanguage() async {
+    SharedPreferences localstorage = await SharedPreferences.getInstance();
+    String? lang = localstorage.getString('lang');
+    // ignore: use_build_context_synchronously
+    final provider = Provider.of<LocaleProvider>(context, listen: false);
+    if (lang != null) {
+      provider.setLocale(Locale(lang));
+    } else {
+      provider.setLocale(const Locale('en'));
+    }
+  }
+
   @override
   void initState() {
-    //_checkIfLoggedIn();
     super.initState();
+    getLanguage();
   }
 
   @override
@@ -105,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Row(
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.only(left: 30.0),
+                                        padding: const EdgeInsets.only(left: 30.0, right: 30.0),
                                         child: Text(AppLocalizations.of(context)!
                                             .emailIDNumber), //Text('Email/ID Number'),
                                       )
@@ -125,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Row(
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.only(left: 30.0),
+                                        padding: const EdgeInsets.only(left: 30.0, right: 30.0),
                                         child: Text(
                                             AppLocalizations.of(context)!.password), //Text('Password'),
                                       )

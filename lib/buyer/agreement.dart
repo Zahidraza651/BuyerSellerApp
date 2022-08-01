@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -22,8 +24,43 @@ class BuyerAgreement extends StatefulWidget {
 
 class _BuyerAgreementState extends State<BuyerAgreement> {
   String agrrement = '';
+  AgrrementTxt? agtext;
   bool isLoading = false;
+  String? langValue = 'English';
+  var items = ['English', 'Arabic'];
 
+  //accepting agreement
+  Future acceptAgreement() async {
+    setState(() => isLoading = true);
+
+    var token = widget.userData.token;
+    final response = await http.post(Uri.parse('$baseUrl/create_agreement'), headers: {
+      //'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    }, body: {
+      'status': '1'
+    });
+    setState(() => isLoading = false);
+    if (response.statusCode == 200) {
+      _showMsg(
+          '${AppLocalizations.of(context)!.agreement} ${AppLocalizations.of(context)!.accepted}',
+          const Icon(
+            Icons.check,
+            color: Colors.green,
+          ));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const BuyerConfirmation()));
+    } else {
+      _showMsg(
+          'Server Error ${response.statusCode}',
+          const Icon(
+            Icons.close,
+            color: Colors.red,
+          ));
+    }
+  }
+
+  //getting agreement txt
   Future getAgreement() async {
     setState(() => isLoading = true);
 
@@ -38,9 +75,9 @@ class _BuyerAgreementState extends State<BuyerAgreement> {
     );
     setState(() => isLoading = false);
     if (response.statusCode == 200) {
-      AgrrementTxt agtext = AgrrementTxt.fromJson(jsonDecode(response.body));
+      agtext = AgrrementTxt.fromJson(jsonDecode(response.body));
       setState(() {
-        agrrement = agtext.data.txt;
+        agrrement = agtext!.data.txt;
       });
     } else {
       _showMsg(
@@ -109,10 +146,28 @@ class _BuyerAgreementState extends State<BuyerAgreement> {
                                           OutlineInputBorder(borderRadius: BorderRadius.circular(30.0))),
                                   isExpanded: true,
                                   isDense: true,
-                                  items: null,
-                                  onChanged: null,
+                                  value: langValue,
+                                  items: items.map((String items) {
+                                    return DropdownMenuItem(
+                                      value: items,
+                                      child: Text(items),
+                                    );
+                                  }).toList(),
+                                  onChanged: (String? value) {
+                                    langValue = value;
+                                    if (langValue == 'English') {
+                                      setState(() {
+                                        agrrement = agtext!.data.txt;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        agrrement =
+                                            'في حالة وجود أي تعارض بين هذه الاتفاقية وأياتفاقية أخرى يكون كلا الطرفين طرفين فيها ، يتشاور الطرفانمع بعضهم البعض بهدف إيجاد حل مرضٍ للطرفين فيوفقا للقانون الدولي العام.';
+                                      });
+                                    }
+                                  },
                                   //value: 'English',
-                                  hint: const Text('English'),
+                                  //hint: const Text('English'),
                                   icon: const Icon(
                                     Icons.arrow_drop_down,
                                     color: Colors.black,
@@ -150,11 +205,7 @@ class _BuyerAgreementState extends State<BuyerAgreement> {
                                       textColor: Colors.white,
                                       color: const Color(0xff128383),
                                       onpressed: () {
-                                        //TODO code for accept agreement
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => const BuyerConfirmation()));
+                                        acceptAgreement();
                                       },
                                     ),
                                   )),
@@ -166,7 +217,7 @@ class _BuyerAgreementState extends State<BuyerAgreement> {
                                         textColor: Colors.white,
                                         color: Colors.grey[400],
                                         onpressed: () {
-                                          //TODO code for reject agreement
+                                          Navigator.pop(context);
                                         },
                                       ))),
                             ],

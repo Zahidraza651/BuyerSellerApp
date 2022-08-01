@@ -5,6 +5,7 @@ import 'package:seller_side/home_screen/home.dart';
 import 'package:seller_side/models/requestStatusList.dart';
 import 'package:seller_side/models/request_status.dart';
 import 'package:seller_side/models/user.dart';
+import 'package:seller_side/post_login/welcome.dart';
 import 'package:seller_side/widgets/loader.dart';
 import 'package:seller_side/widgets/statusWidget.dart';
 import 'package:http/http.dart' as http;
@@ -72,7 +73,7 @@ class _RequestStatusDetailState extends State<RequestStatusDetail> {
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => HomeScreen(
+                            builder: (context) => Welcome(
                                   userData: widget.userdata,
                                 )));
                   },
@@ -82,7 +83,7 @@ class _RequestStatusDetailState extends State<RequestStatusDetail> {
                   )),
               title: Text(
                 widget.title,
-                style: TextStyle(color: Colors.black),
+                style: const TextStyle(color: Colors.black),
               ),
             ),
             body: Padding(
@@ -98,7 +99,11 @@ class _RequestStatusDetailState extends State<RequestStatusDetail> {
                           itemCount: statusList.length,
                           itemBuilder: (contex, index) {
                             return Statuswidget(
-                              status: 'Pending',
+                              status: widget.status == '0'
+                                  ? 'Pending'
+                                  : widget.status == '1'
+                                      ? 'Completed'
+                                      : 'Rejected',
                               itemtype: statusList[index].requestData[index].item_type.toString(),
                               price: statusList[index].requestData[index].price.toString(),
                               detail: statusList[index].requestData[index].details.toString(),

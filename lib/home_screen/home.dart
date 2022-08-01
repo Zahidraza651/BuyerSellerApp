@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Expanded(
                     child: Padding(
-                  padding: const EdgeInsets.only(left: 15.0),
+                  padding: const EdgeInsets.only(left: 15.0, right: 15.0),
                   child: Text(
                     widget.userData!.user!.name.toString(),
                     //AppLocalizations.of(context)!.aamirHussain, //'Aamir Hussain !',
@@ -268,7 +268,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       )),
                   onTap: () {
                     Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => const RejectedScreen()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RequestStatusDetail(
+                                  status: '2',
+                                  title: AppLocalizations.of(context)!.rejected,
+                                  userdata: widget.userData!,
+                                )));
                   },
                 )),
               ],
@@ -315,7 +321,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       )),
                   onTap: () {
                     Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => const CompletedScreen()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RequestStatusDetail(
+                                  status: '1',
+                                  title: AppLocalizations.of(context)!.completed,
+                                  userdata: widget.userData!,
+                                )));
                   },
                 )),
               ],
@@ -328,7 +340,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 12.0),
+                    padding: const EdgeInsets.only(left: 12.0, right: 15),
                     child: Text(AppLocalizations.of(context)!.enterInvoice), //Text('Enter Invoice #'),
                   )
                 ],

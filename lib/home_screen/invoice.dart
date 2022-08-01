@@ -132,13 +132,13 @@ class _InvoiceState extends State<Invoice> {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                      children: const [
                         Expanded(
                             child: Padding(
                           padding: EdgeInsets.fromLTRB(0, 7, 0, 7),
                           child: Text(
                             "\$0.00", //'Alert Title',
-                            style: const TextStyle(
+                            style: TextStyle(
                                 color: Colors.black, fontSize: 15.0, fontWeight: FontWeight.bold),
                           ),
                         ))
@@ -185,7 +185,7 @@ class _InvoiceState extends State<Invoice> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Center(
+                                  const Center(
                                     child: Icon(
                                       Icons.attach_file,
                                       color: Color(0xFF128383),
@@ -333,13 +333,13 @@ class _InvoiceState extends State<Invoice> {
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
+                            children: const [
                               Expanded(
                                   child: Padding(
                                 padding: EdgeInsets.fromLTRB(0, 7, 0, 0),
                                 child: Text(
                                   "355663467", //'Alert Title',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       color: Colors.black, fontSize: 15.0, fontWeight: FontWeight.bold),
                                 ),
                               ))
@@ -400,6 +400,10 @@ class _InvoiceState extends State<Invoice> {
                         ],
                       ),
                     ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row()
                   ],
                 ),
               ),

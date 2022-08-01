@@ -40,9 +40,14 @@ class _StatuswidgetState extends State<Statuswidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                    padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                     decoration: BoxDecoration(
-                        color: Color(0xFFF2CC59), borderRadius: BorderRadius.circular(20.0)),
+                        color: widget.status == 'Pending'
+                            ? const Color(0xFFF2CC59)
+                            : widget.status == 'Rejected'
+                                ? const Color(0xffFF3B3B)
+                                : const Color(0xff2CC91F),
+                        borderRadius: BorderRadius.circular(20.0)),
                     child: Center(
                       child: Text(
                         widget.status, //'Unread',
@@ -56,7 +61,7 @@ class _StatuswidgetState extends State<Statuswidget> {
               children: [
                 Expanded(
                     child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                   child: Text(
                     AppLocalizations.of(context)!.itemtype, //'Alert Title',
                     style: const TextStyle(
@@ -70,7 +75,7 @@ class _StatuswidgetState extends State<Statuswidget> {
               children: [
                 Expanded(
                     child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 7, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
                   child: Text(
                     widget.itemtype, //'Alert Title',
                     style: const TextStyle(
@@ -84,9 +89,9 @@ class _StatuswidgetState extends State<Statuswidget> {
               children: [
                 Expanded(
                     child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                   child: Text(
-                    AppLocalizations.of(context)!.price, //'Alert Title',
+                    AppLocalizations.of(context)!.price,
                     style: const TextStyle(
                         color: Color(0xFF969696), fontSize: 15.0, fontWeight: FontWeight.bold),
                   ),
@@ -98,11 +103,25 @@ class _StatuswidgetState extends State<Statuswidget> {
               children: [
                 Expanded(
                     child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 7, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
                   child: Text(
-                    "\$${widget.price}", //'Alert Title',
+                    "\$${widget.price}",
                     style: const TextStyle(
                         color: Colors.black, fontSize: 15.0, fontWeight: FontWeight.bold),
+                  ),
+                ))
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                    child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: Text(
+                    AppLocalizations.of(context)!.details,
+                    style: const TextStyle(
+                        color: Color(0xFF969696), fontSize: 15.0, fontWeight: FontWeight.bold),
                   ),
                 ))
               ],
@@ -116,7 +135,8 @@ class _StatuswidgetState extends State<Statuswidget> {
                   child: Text(
                     widget.detail,
                     //overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: Colors.black, fontSize: 12.0, fontWeight: FontWeight.normal),
+                    style: const TextStyle(
+                        color: Colors.black, fontSize: 12.0, fontWeight: FontWeight.normal),
                   ),
                 ))
               ],
