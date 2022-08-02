@@ -1,18 +1,26 @@
+import 'dart:io';
+
 import 'package:dotted_border/dotted_border.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:seller_side/home_screen/agreement.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
+import 'package:seller_side/models/user.dart';
 import '../widgets/app_button.dart';
 import 'invoice.dart';
 
 class Invoice extends StatefulWidget {
-  const Invoice({Key? key}) : super(key: key);
+  final UserData userdata;
+  const Invoice({Key? key, required this.userdata}) : super(key: key);
 
   @override
   State<Invoice> createState() => _InvoiceState();
 }
 
 class _InvoiceState extends State<Invoice> {
+  List<XFile?> img = [];
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -169,70 +177,76 @@ class _InvoiceState extends State<Invoice> {
                         fontWeight: FontWeight.bold),
                   )),
               Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.08,
-                    width: MediaQuery.of(context).size.width * 0.16,
-                    margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(12)),
-                      child: DottedBorder(
-                        color: const Color(0xFF128383),
-                        borderType: BorderType.RRect,
-                        radius: const Radius.circular(12),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Center(
-                              child: Icon(
-                                Icons.attach_file,
-                                color: Color(0xFF128383),
-                              ),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+                      child: Container(
+                        height: 60,
+                        width: 60,
+                        margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.all(const Radius.circular(12)),
+                          child: DottedBorder(
+                            color: const Color(0xFF128383),
+                            borderType: BorderType.RRect,
+                            radius: const Radius.circular(12),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Center(
+                                    child: IconButton(
+                                      icon: const Icon(Icons.attach_file),
+                                      color: const Color(0xFF128383),
+                                      onPressed: () async {
+                                        await Permission.photos.request();
+                                        var permissionStatus = await Permission.photos.status;
+                                        if (permissionStatus.isGranted) {
+                                          // ignore: use_build_context_synchronously
+                                          await showImageSource(context);
+                                        } else {
+                                          _showMsg(
+                                              'cant access your gallery',
+                                              const Icon(
+                                                Icons.close,
+                                                color: Colors.red,
+                                              ));
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Center(
+                                      child: Text(
+                                    AppLocalizations.of(context)!.attach,
+                                    style: const TextStyle(color: const Color(0xFF128383)),
+                                  )),
+                                )
+                              ],
                             ),
-                            Center(
-                                child: Text(
-                              AppLocalizations.of(context)!.attach,
-                              style: const TextStyle(color: Color(0xFF128383)),
-                            )),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: width * 0.03,
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.08,
-                    width: MediaQuery.of(context).size.width * 0.16,
-                    margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(12)),
+                      )),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(2.0, 10.0, 5.0, 10.0),
                       child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(Radius.circular(12)),
-                          color: const Color(0xFF128383).withOpacity(0.15),
-                        ),
+                        height: 60,
+                        width: 60,
+                        margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
+                        child: ListView.builder(
+                            itemCount: img.length,
+                            shrinkWrap: true,
+                            primary: false,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return getPickedImage(img[index]!.path, index);
+                            }),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    width: width * 0.03,
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.08,
-                    width: MediaQuery.of(context).size.width * 0.16,
-                    margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(12)),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(Radius.circular(12)),
-                          color: const Color(0xFF128383).withOpacity(0.15),
-                        ),
-                      ),
-                    ),
-                  ),
+                  )
                 ],
               ),
               Container(
@@ -405,7 +419,9 @@ class _InvoiceState extends State<Invoice> {
                       color: const Color(0xff128383),
                       onpressed: () {
                         Navigator.push(
-                            context, MaterialPageRoute(builder: (context) => const Agreement()));
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Agreement(userData: widget.userdata)));
                       },
                       text: AppLocalizations.of(context)!.proceedtoAgreement,
                       textColor: Colors.white,
@@ -418,5 +434,105 @@ class _InvoiceState extends State<Invoice> {
         ),
       ),
     );
+  }
+  //
+  //
+  //image sources
+
+  showImageSource(BuildContext context) async {
+    return await showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                  leading: const Icon(Icons.camera_alt),
+                  title: const Text('Camera'),
+                  onTap: () async {
+                    final image = await ImagePicker().pickImage(source: ImageSource.camera);
+                    if (image == null) {
+                      return;
+                    } else {
+                      setState(() {
+                        img.add(image);
+                      });
+                    }
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context);
+                  }),
+              ListTile(
+                leading: const Icon(Icons.image),
+                title: const Text('Gallery'),
+                onTap: () async {
+                  final List<XFile>? images = await ImagePicker().pickMultiImage();
+                  if (images == null) {
+                    return;
+                  } else {
+                    setState(() {
+                      img.addAll(images);
+                    });
+                  }
+                  // ignore: use_build_context_synchronously
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  //images collection
+
+  Widget getPickedImage(String path, int index) {
+    return Stack(
+      children: [
+        Container(
+          height: 60,
+          width: 60,
+          margin: const EdgeInsets.fromLTRB(3.0, 0, 3.0, 0),
+          child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(12)),
+              child: Image.file(
+                File(path),
+                fit: BoxFit.fill,
+              )),
+        ),
+        Positioned(
+            bottom: 0,
+            left: 32,
+            top: 28,
+            right: 0,
+            child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    img.removeAt(index);
+                  });
+                },
+                icon: const Icon(
+                  Icons.delete,
+                  color: Colors.red,
+                )))
+      ],
+    );
+  }
+
+  _showMsg(String msg, Icon icon) {
+    final snackBar = SnackBar(
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Text(
+              msg,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          icon
+        ],
+      ),
+      duration: const Duration(seconds: 2),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

@@ -78,7 +78,7 @@
      "attach": "يربط",
      "company": "شركة",
      "description": "وصف",
-     "filetypes" : "إرفاق الملفات (jpg، png، jpeg) 02 فقط",
+     "filetypes" : "إرفاق الملفات (jpg، png، jpeg)",
      "allfields": "يرجى تقديم جميع الحقول",
      "update": "تحديث",
      "updateLanguage": "لغة",

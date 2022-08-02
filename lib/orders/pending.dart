@@ -159,10 +159,7 @@ class _PendingScreenState extends State<PendingScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                  context, MaterialPageRoute(builder: (context) => const Invoice()));
-                            },
+                            onTap: () {},
                             child: Container(
                                 padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
                                 decoration: BoxDecoration(

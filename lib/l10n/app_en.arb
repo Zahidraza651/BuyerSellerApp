@@ -81,7 +81,7 @@
      "attach": "Attach",
      "company": "Company",
      "description": "Description",
-     "filetypes" : "Attach files(jpg, png, jpeg) 02 only",
+     "filetypes" : "Attach files(jpg, png, jpeg)",
      "allfields": "Please provide all fields",
       "update": "Update",
       "updateLanguage": "Language",
