@@ -26,11 +26,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Color? buyerContainerColor = Colors.grey[300];
-  Color? sellerContainerColor = Colors.black;
-  Color? buyerTextColor = Colors.grey;
-  Color? sellerTextColor = Colors.white;
-  bool seller = true;
+  Color? buyerContainerColor = Colors.black;
+  Color? sellerContainerColor = Colors.grey[300];
+  Color? buyerTextColor = Colors.white;
+  Color? sellerTextColor = Colors.grey;
+  bool seller = false;
   String completed = '0';
   String pending = '0';
   String rejected = '0';
@@ -366,7 +366,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 onpressed: () {
                                   //TODO code for search invoice
                                   Navigator.push(
-                                      context, MaterialPageRoute(builder: (context) => const Invoice()));
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Invoice(
+                                                userdata: widget.userData!,
+                                              )));
                                 },
                               ))),
                     ],

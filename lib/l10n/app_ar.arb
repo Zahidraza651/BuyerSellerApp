@@ -78,8 +78,11 @@
      "attach": "يربط",
      "company": "شركة",
      "description": "وصف",
-     "filetypes" : "إرفاق الملفات (jpg، png، jpeg) 02 فقط",
-     "allfields": "يرجى تقديم جميع الحقول"
+     "filetypes" : "إرفاق الملفات (jpg، png، jpeg)",
+     "allfields": "يرجى تقديم جميع الحقول",
+     "update": "تحديث",
+     "updateLanguage": "لغة",
+     "gender": "جنس"
      
 
 

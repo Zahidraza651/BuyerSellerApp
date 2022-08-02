@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
+import 'package:seller_side/models/user.dart';
 
 import '../home_screen/invoice.dart';
 
@@ -8,13 +9,15 @@ class Statuswidget extends StatefulWidget {
   final String itemtype;
   final String price;
   final String detail;
+  final UserData userData;
 
   const Statuswidget(
       {Key? key,
       required this.detail,
       required this.itemtype,
       required this.price,
-      required this.status})
+      required this.status,
+      required this.userData})
       : super(key: key);
 
   @override
@@ -145,7 +148,12 @@ class _StatuswidgetState extends State<Statuswidget> {
         ),
       ),
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const Invoice()));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Invoice(
+                      userdata: widget.userData,
+                    )));
       },
     );
   }

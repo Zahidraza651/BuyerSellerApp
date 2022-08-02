@@ -29,31 +29,72 @@ class _LoginScreenState extends State<LoginScreen> {
   String validationTxt = '';
   bool isLoading = false;
   bool isAuth = false;
+  bool isEnable = true; //enable disable button
 
 //getting already logged in info
   void _checkIfLoggedIn() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var token = localStorage.getString('token');
-    if (token != null) {
+    var userID = localStorage.getString('userid');
+    var savpassword = localStorage.getString('password');
+    if (userID != null && savpassword != null) {
       setState(() {
-        isAuth = true;
+        isLoading = true;
+        isEnable = false;
       });
+      String encodedJson = jsonEncode(<String, dynamic>{
+        'mobile': jsonDecode(userID),
+        'password': jsonDecode(savpassword),
+        'user_type': '1'
+      });
+      final response = await http.post(Uri.parse('$baseUrl/login'),
+          body: encodedJson,
+          headers: {'Accept': 'application/json', 'content-Type': 'application/json'});
+      setState(() {
+        isLoading = false;
+        isEnable = true;
+      });
+
+      if (response.statusCode == 200) {
+        UserData userData = UserData.fromjson(jsonDecode(response.body));
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Welcome(
+                      userData: userData,
+                    )));
+      } else {
+        _showMsg(
+            response.statusCode.toString(),
+            const Icon(
+              Icons.check,
+              color: Colors.green,
+            ));
+      }
     }
   }
 
 //loging in
-  Future login() async {
-    setState(() => isLoading = true);
+  login() async {
+    setState(() {
+      isLoading = true;
+      isEnable = false;
+    });
     String encodedJson =
         jsonEncode(<String, dynamic>{'mobile': email.text, 'password': password.text, 'user_type': '1'});
     final response = await http.post(Uri.parse('$baseUrl/login'),
         body: encodedJson, headers: {'Accept': 'application/json', 'content-Type': 'application/json'});
-    setState(() => isLoading = false);
+    setState(() {
+      isLoading = false;
+      isEnable = true;
+    });
 
     if (response.statusCode == 200) {
       UserData userData = UserData.fromjson(jsonDecode(response.body));
       SharedPreferences localStorage = await SharedPreferences.getInstance();
-      await localStorage.setString('token', jsonEncode(userData.token));
+      localStorage.setString('userid', jsonEncode(email.text));
+      localStorage.setString('password', jsonEncode(password.text));
+
       // ignore: use_build_context_synchronously
       Navigator.pushReplacement(
           context,
@@ -89,6 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     getLanguage();
+    _checkIfLoggedIn();
   }
 
   @override
@@ -169,38 +211,40 @@ class _LoginScreenState extends State<LoginScreen> {
                                         padding: const EdgeInsets.all(20.0),
                                         child: AppButton(
                                           color: const Color(0xff128383),
-                                          onpressed: () {
-                                            if (email.text.isEmpty && password.text.isEmpty) {
-                                              setState(() => validationTxt =
-                                                  AppLocalizations.of(context)!.emailphone);
-                                              _showMsg(
-                                                  validationTxt,
-                                                  const Icon(
-                                                    Icons.close,
-                                                    color: Colors.red,
-                                                  ));
-                                            } else if (password.text.isEmpty) {
-                                              setState(() => validationTxt =
-                                                  AppLocalizations.of(context)!.phoneOnly);
-                                              _showMsg(
-                                                  validationTxt,
-                                                  const Icon(
-                                                    Icons.close,
-                                                    color: Colors.red,
-                                                  ));
-                                            } else if (email.text.isEmpty) {
-                                              setState(() => validationTxt =
-                                                  AppLocalizations.of(context)!.phoneorEmail);
-                                              _showMsg(
-                                                  validationTxt,
-                                                  const Icon(
-                                                    Icons.close,
-                                                    color: Colors.red,
-                                                  ));
-                                            } else {
-                                              login();
-                                            }
-                                          },
+                                          onpressed: isEnable
+                                              ? () {
+                                                  if (email.text.isEmpty && password.text.isEmpty) {
+                                                    setState(() => validationTxt =
+                                                        AppLocalizations.of(context)!.emailphone);
+                                                    _showMsg(
+                                                        validationTxt,
+                                                        const Icon(
+                                                          Icons.close,
+                                                          color: Colors.red,
+                                                        ));
+                                                  } else if (password.text.isEmpty) {
+                                                    setState(() => validationTxt =
+                                                        AppLocalizations.of(context)!.phoneOnly);
+                                                    _showMsg(
+                                                        validationTxt,
+                                                        const Icon(
+                                                          Icons.close,
+                                                          color: Colors.red,
+                                                        ));
+                                                  } else if (email.text.isEmpty) {
+                                                    setState(() => validationTxt =
+                                                        AppLocalizations.of(context)!.phoneorEmail);
+                                                    _showMsg(
+                                                        validationTxt,
+                                                        const Icon(
+                                                          Icons.close,
+                                                          color: Colors.red,
+                                                        ));
+                                                  } else {
+                                                    login();
+                                                  }
+                                                }
+                                              : null,
                                           text: AppLocalizations.of(context)!.login, //'Login',
                                           textColor: Colors.white,
                                         ),

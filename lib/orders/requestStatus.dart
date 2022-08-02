@@ -107,6 +107,7 @@ class _RequestStatusDetailState extends State<RequestStatusDetail> {
                               itemtype: statusList[index].requestData[index].item_type.toString(),
                               price: statusList[index].requestData[index].price.toString(),
                               detail: statusList[index].requestData[index].details.toString(),
+                              userData: widget.userdata,
                             );
                           })),
             )));
