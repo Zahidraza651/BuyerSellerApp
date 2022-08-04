@@ -99,7 +99,7 @@ class _NewRequestState extends State<NewRequest> {
                 ),
                 leading: IconButton(
                     onPressed: () {
-                      Navigator.push(context,
+                      Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (context) => Welcome(userData: widget.userData)));
                     },
                     icon: const Icon(
