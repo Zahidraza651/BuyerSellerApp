@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:seller_side/constants.dart';
 import 'package:seller_side/home_screen/home.dart';
 import 'package:seller_side/models/user.dart';
@@ -165,7 +166,7 @@ class _RegisterDataState extends State<RegisterData> {
                               )
                             : ClipOval(
                                 child: Image.file(
-                                  img!,
+                                  File(img!.path),
                                   height: 80,
                                   width: 80,
                                   fit: BoxFit.fill,
@@ -173,16 +174,10 @@ class _RegisterDataState extends State<RegisterData> {
                               ),
                         onTap: () async {
                           await Permission.photos.request();
-
                           var permissionStatus = await Permission.photos.status;
                           if (permissionStatus.isGranted) {
-                            final image = await FilePicker.platform.pickFiles();
-                            if (image == null) {
-                              return;
-                            }
-                            setState(() {
-                              img = File(image.files.single.path!);
-                            });
+                            // ignore: use_build_context_synchronously
+                            await showImageSource(context);
                           } else {
                             _showMsg(
                                 'cant access your gallery',
@@ -327,6 +322,51 @@ class _RegisterDataState extends State<RegisterData> {
         ),
       )),
     ));
+  }
+
+  //image sources
+
+  showImageSource(BuildContext context) async {
+    return await showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                  leading: const Icon(Icons.camera_alt),
+                  title: const Text('Camera'),
+                  onTap: () async {
+                    final image = await ImagePicker().pickImage(source: ImageSource.camera);
+                    if (image == null) {
+                      return;
+                    } else {
+                      setState(() {
+                        img = File(image.path);
+                      });
+                    }
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context);
+                  }),
+              ListTile(
+                leading: const Icon(Icons.image),
+                title: const Text('Gallery'),
+                onTap: () async {
+                  final images = await ImagePicker().pickImage(source: ImageSource.gallery);
+                  if (images == null) {
+                    return;
+                  } else {
+                    setState(() {
+                      img = File(images.path);
+                    });
+                  }
+                  // ignore: use_build_context_synchronously
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        });
   }
 
   //for shwing Error messages

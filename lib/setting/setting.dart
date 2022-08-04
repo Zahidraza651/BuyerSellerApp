@@ -42,7 +42,9 @@ class _SettingScreenState extends State<SettingScreen> {
     setState(() => isLoading = false);
     if (response.statusCode == 200) {
       SharedPreferences localStorage = await SharedPreferences.getInstance();
-      final success = localStorage.remove('token');
+      final success = localStorage.remove('userid');
+      final success2 = localStorage.remove('password');
+
       // ignore: use_build_context_synchronously
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
     } else {

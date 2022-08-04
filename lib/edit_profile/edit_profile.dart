@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:seller_side/models/user.dart';
@@ -112,16 +113,10 @@ class _Update_UserState extends State<Update_User> {
                         ),
                   onTap: () async {
                     await Permission.photos.request();
-
                     var permissionStatus = await Permission.photos.status;
                     if (permissionStatus.isGranted) {
-                      final image = await FilePicker.platform.pickFiles();
-                      if (image == null) {
-                        return;
-                      }
-                      setState(() {
-                        img = File(image.files.single.path!);
-                      });
+                      // ignore: use_build_context_synchronously
+                      await showImageSource(context);
                     } else {
                       _showMsg(
                           'cant access your gallery',
@@ -228,6 +223,51 @@ class _Update_UserState extends State<Update_User> {
         ),
       ),
     );
+  }
+
+  //image sources
+
+  showImageSource(BuildContext context) async {
+    return await showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                  leading: const Icon(Icons.camera_alt),
+                  title: const Text('Camera'),
+                  onTap: () async {
+                    final image = await ImagePicker().pickImage(source: ImageSource.camera);
+                    if (image == null) {
+                      return;
+                    } else {
+                      setState(() {
+                        img = File(image.path);
+                      });
+                    }
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context);
+                  }),
+              ListTile(
+                leading: const Icon(Icons.image),
+                title: const Text('Gallery'),
+                onTap: () async {
+                  final images = await ImagePicker().pickImage(source: ImageSource.gallery);
+                  if (images == null) {
+                    return;
+                  } else {
+                    setState(() {
+                      img = File(images.path);
+                    });
+                  }
+                  // ignore: use_build_context_synchronously
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        });
   }
 
   _showMsg(String msg, Icon icon) {

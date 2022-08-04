@@ -1,15 +1,18 @@
 class RequestStatusList {
-  //bool? success;
+  bool? success;
   List<RequestDetailData> requestData;
 
   RequestStatusList({
     required this.requestData,
+    required this.success,
   });
 
-  factory RequestStatusList.fromjson(List<dynamic> reqjson) {
+  factory RequestStatusList.fromjson(Map<String, dynamic> reqjson) {
+    var list = reqjson['data'] as List;
     return RequestStatusList(
-      requestData: reqjson.map((e) => RequestDetailData.fromjson(e)).toList(),
-      //success: reqjson['success']
+      //requestData: reqjson.map((e) => RequestDetailData.fromjson(e)).toList(),
+      success: reqjson['success'],
+      requestData: list.map((e) => RequestDetailData.fromjson(e)).toList(),
     );
   }
 }

@@ -27,7 +27,8 @@ class RequestStatusDetail extends StatefulWidget {
 
 class _RequestStatusDetailState extends State<RequestStatusDetail> {
   bool isLoading = false;
-  List<RequestStatusList> statusList = [];
+  RequestStatusList? statusList;
+  int listCount = 0;
   Future getStatusList() async {
     setState(() => isLoading = true);
     var token = widget.userdata.token;
@@ -42,8 +43,8 @@ class _RequestStatusDetailState extends State<RequestStatusDetail> {
     setState(() => isLoading = false);
     if (response.statusCode == 200) {
       setState(() {
-        final raw = jsonDecode(response.body)['data'] as List;
-        statusList = raw.map((e) => RequestStatusList.fromjson(raw)).toList();
+        statusList = RequestStatusList.fromjson(jsonDecode(response.body));
+        listCount = statusList!.requestData.length;
       });
     } else {
       _showMsg(
@@ -96,7 +97,8 @@ class _RequestStatusDetailState extends State<RequestStatusDetail> {
                       : ListView.builder(
                           shrinkWrap: true,
                           primary: false,
-                          itemCount: statusList.length,
+                          //itemCount: statusList.length,
+                          itemCount: listCount,
                           itemBuilder: (contex, index) {
                             return Statuswidget(
                               status: widget.status == '0'
@@ -104,9 +106,9 @@ class _RequestStatusDetailState extends State<RequestStatusDetail> {
                                   : widget.status == '1'
                                       ? 'Completed'
                                       : 'Rejected',
-                              itemtype: statusList[index].requestData[index].item_type.toString(),
-                              price: statusList[index].requestData[index].price.toString(),
-                              detail: statusList[index].requestData[index].details.toString(),
+                              itemtype: statusList!.requestData[index].item_type.toString(),
+                              price: statusList!.requestData[index].price.toString(),
+                              detail: statusList!.requestData[index].details.toString(),
                               userData: widget.userdata,
                             );
                           })),
