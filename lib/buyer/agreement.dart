@@ -93,15 +93,14 @@ class _BuyerAgreementState extends State<BuyerAgreement> {
     );
     setState(() => isLoading = false);
     if (response.statusCode == 200) {
-<<<<<<< HEAD
+
       AgrrementTxt agtext = AgrrementTxt.fromJson(jsonDecode(response.body));
       setState(() {
         agrrement = agtext.data.txt;
-=======
+
       agtext = AgrrementTxt.fromJson(jsonDecode(response.body));
       setState(() {
         agrrement = agtext!.data.txt;
->>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
       });
     } else {
       _showMsg(
@@ -118,8 +117,6 @@ class _BuyerAgreementState extends State<BuyerAgreement> {
     super.initState();
     getAgreement();
   }
-
-<<<<<<< HEAD
   Future acceptAgreement({String? userId, String? status}) async {
     setState(() => isLoading = true);
     var token = widget.userData.token;
