@@ -41,17 +41,11 @@ dependencies:
   provider: ^6.0.3
   http: ^0.13.4
   shared_preferences: ^2.0.15
-<<<<<<< HEAD
-  image_picker: ^0.8.5+3
-  permission_handler: ^9.2.0
-  dotted_border: ^2.0.0+2
-=======
   file_picker: ^5.0.0
   permission_handler: ^9.2.0
   dotted_border: ^2.0.0+2
   image_picker: ^0.8.5+3
   share_plus: ^4.0.10
->>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
 
 dev_dependencies:
   flutter_test:

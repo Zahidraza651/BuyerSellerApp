@@ -145,10 +145,6 @@ class User {
   }
 }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
 class UpdateUser {
   bool? success;
   String? message;
@@ -161,13 +157,7 @@ class UpdateUser {
     success = json['success'];
     message = json['message'];
     redirect = json['redirect'];
-<<<<<<< HEAD
-    userProfile = json['user_profile'] != null
-        ? new UserProfile.fromJson(json['user_profile'])
-        : null;
-=======
     userProfile = json['user_profile'] != null ? new UserProfile.fromJson(json['user_profile']) : null;
->>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
   }
 
   Map<String, dynamic> toJson() {
@@ -223,44 +213,6 @@ class UserProfile {
 
   UserProfile(
       {this.id,
-<<<<<<< HEAD
-        this.name,
-        this.username,
-        this.email,
-        this.firebaseEmail,
-        this.mobile,
-        this.countryId,
-        this.nicPassport,
-        this.education,
-        this.languages,
-        this.idPhoto,
-        this.photo,
-        this.type,
-        this.role,
-        this.emailVerifiedAt,
-        this.social,
-        this.theme,
-        this.locale,
-        this.createdAt,
-        this.updatedAt,
-        this.businessName,
-        this.dob,
-        this.gender,
-        this.address,
-        this.coordinates,
-        this.vendorTypeId,
-        this.roomStatus,
-        this.tableStatus,
-        this.featured,
-        this.openStatus,
-        this.iosDeviceId,
-        this.androidDeviceId,
-        this.webDeviceId,
-        this.userType,
-        this.status,
-        this.isOnline,
-        this.deletedAt});
-=======
       this.name,
       this.username,
       this.email,
@@ -297,7 +249,6 @@ class UserProfile {
       this.status,
       this.isOnline,
       this.deletedAt});
->>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
 
   UserProfile.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -340,11 +291,7 @@ class UserProfile {
   }
 
   Map<String, dynamic> toJson() {
-<<<<<<< HEAD
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-=======
     final Map<String, dynamic> data = Map<String, dynamic>();
->>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
     data['id'] = this.id;
     data['name'] = this.name;
     data['username'] = this.username;
@@ -385,113 +332,3 @@ class UserProfile {
     return data;
   }
 }
-<<<<<<< HEAD
-
-
-class searchReq {
-  final String request_id;
-
-  searchReq({required this.request_id});
-
-  factory searchReq.fromJson(Map<String, dynamic> json) {
-    return searchReq(
-      request_id: json['request_id'],
-    );
-  }
-}
-
-
-class searchReqData {
-  bool? success;
-  Data? data;
-
-  searchReqData({this.success, this.data, });
-
-  searchReqData.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['success'] = this.success;
-    if (this.data != null) {
-      data['data'] = this.data!.toJson();
-    }
-    return data;
-  }
-}
-
-class Data {
-  int? id;
-  int? userId;
-  String? itemType;
-  String? price;
-  String? details;
-  int? status;
-  String? createdAt;
-  String? updatedAt;
-  String? deliveryMethod;
-  String? paymentMethod;
-  String? paymentStatus;
-  String? sellerId;
-  var attachment;
-
-  Data(
-      {this.id,
-        this.userId,
-        this.itemType,
-        this.price,
-        this.details,
-        this.status,
-        this.createdAt,
-        this.updatedAt,
-        this.deliveryMethod,
-        this.paymentMethod,
-        this.paymentStatus,
-        this.sellerId,
-        this.attachment});
-
-  Data.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    userId = json['user_id'];
-    itemType = json['item_type'];
-    price = json['price'];
-    details = json['details'];
-    status = json['status'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    deliveryMethod = json['delivery_method'];
-    paymentMethod = json['payment_method'];
-    paymentStatus = json['payment_status'];
-    sellerId = json['seller_id'];
-    if (json['attachment'] != null) {
-      attachment = <String>[];
-      json['attachment'].forEach((v) {
-        attachment!.add((v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['user_id'] = this.userId;
-    data['item_type'] = this.itemType;
-    data['price'] = this.price;
-    data['details'] = this.details;
-    data['status'] = this.status;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['delivery_method'] = this.deliveryMethod;
-    data['payment_method'] = this.paymentMethod;
-    data['payment_status'] = this.paymentStatus;
-    data['seller_id'] = this.sellerId;
-    if (this.attachment != null) {
-      data['attachment'] = this.attachment!.map((v) => v).toList();
-    }
-    return data;
-  }
-}
-=======
->>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
