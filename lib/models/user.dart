@@ -145,7 +145,10 @@ class User {
   }
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
 class UpdateUser {
   bool? success;
   String? message;
@@ -158,9 +161,13 @@ class UpdateUser {
     success = json['success'];
     message = json['message'];
     redirect = json['redirect'];
+<<<<<<< HEAD
     userProfile = json['user_profile'] != null
         ? new UserProfile.fromJson(json['user_profile'])
         : null;
+=======
+    userProfile = json['user_profile'] != null ? new UserProfile.fromJson(json['user_profile']) : null;
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
   }
 
   Map<String, dynamic> toJson() {
@@ -216,6 +223,7 @@ class UserProfile {
 
   UserProfile(
       {this.id,
+<<<<<<< HEAD
         this.name,
         this.username,
         this.email,
@@ -252,6 +260,44 @@ class UserProfile {
         this.status,
         this.isOnline,
         this.deletedAt});
+=======
+      this.name,
+      this.username,
+      this.email,
+      this.firebaseEmail,
+      this.mobile,
+      this.countryId,
+      this.nicPassport,
+      this.education,
+      this.languages,
+      this.idPhoto,
+      this.photo,
+      this.type,
+      this.role,
+      this.emailVerifiedAt,
+      this.social,
+      this.theme,
+      this.locale,
+      this.createdAt,
+      this.updatedAt,
+      this.businessName,
+      this.dob,
+      this.gender,
+      this.address,
+      this.coordinates,
+      this.vendorTypeId,
+      this.roomStatus,
+      this.tableStatus,
+      this.featured,
+      this.openStatus,
+      this.iosDeviceId,
+      this.androidDeviceId,
+      this.webDeviceId,
+      this.userType,
+      this.status,
+      this.isOnline,
+      this.deletedAt});
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
 
   UserProfile.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -294,7 +340,11 @@ class UserProfile {
   }
 
   Map<String, dynamic> toJson() {
+<<<<<<< HEAD
     final Map<String, dynamic> data = new Map<String, dynamic>();
+=======
+    final Map<String, dynamic> data = Map<String, dynamic>();
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
     data['id'] = this.id;
     data['name'] = this.name;
     data['username'] = this.username;
@@ -335,6 +385,7 @@ class UserProfile {
     return data;
   }
 }
+<<<<<<< HEAD
 
 
 class searchReq {
@@ -442,3 +493,5 @@ class Data {
     return data;
   }
 }
+=======
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7

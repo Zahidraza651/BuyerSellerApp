@@ -23,7 +23,11 @@ class _WelcomeState extends State<Welcome> {
     super.initState();
     screens = [
       HomeScreen(userData: widget.userData),
+<<<<<<< HEAD
       NotificationScreen(userData: widget.userData,),
+=======
+      const NotificationScreen(),
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
       SettingScreen(
         userData: widget.userData,
       )

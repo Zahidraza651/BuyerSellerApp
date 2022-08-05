@@ -1,4 +1,14 @@
+<<<<<<< HEAD
 import 'package:flutter/material.dart';
+=======
+import 'dart:io';
+
+import 'package:dotted_border/dotted_border.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
 import 'package:seller_side/widgets/alert.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import '../widgets/app_button.dart';
@@ -13,8 +23,16 @@ class Confirmation extends StatefulWidget {
 
 class _ConfirmationState extends State<Confirmation> {
   bool visible = false;
+<<<<<<< HEAD
   @override
   Widget build(BuildContext context) {
+=======
+  List<XFile?> img = [];
+  @override
+  Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -151,6 +169,88 @@ class _ConfirmationState extends State<Confirmation> {
               const SizedBox(
                 height: 20.0,
               ),
+<<<<<<< HEAD
+=======
+              Row(children: [
+                SizedBox(
+                  width: width * 0.05,
+                ),
+              ]),
+              //
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+                      child: Container(
+                        height: 60,
+                        width: 60,
+                        margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.all(const Radius.circular(12)),
+                          child: DottedBorder(
+                            color: const Color(0xFF128383),
+                            borderType: BorderType.RRect,
+                            radius: const Radius.circular(12),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Center(
+                                    child: IconButton(
+                                      icon: const Icon(Icons.attach_file),
+                                      color: const Color(0xFF128383),
+                                      onPressed: () async {
+                                        await Permission.photos.request();
+                                        var permissionStatus = await Permission.photos.status;
+                                        if (permissionStatus.isGranted) {
+                                          // ignore: use_build_context_synchronously
+                                          await showImageSource(context);
+                                        } else {
+                                          _showMsg(
+                                              'cant access your gallery',
+                                              const Icon(
+                                                Icons.close,
+                                                color: Colors.red,
+                                              ));
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Center(
+                                      child: Text(
+                                    AppLocalizations.of(context)!.attach,
+                                    style: const TextStyle(color: const Color(0xFF128383)),
+                                  )),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      )),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(2.0, 10.0, 5.0, 10.0),
+                      child: Container(
+                        height: 60,
+                        width: 60,
+                        margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
+                        child: ListView.builder(
+                            itemCount: img.length,
+                            shrinkWrap: true,
+                            primary: false,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return getPickedImage(img[index]!.path, index);
+                            }),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -180,4 +280,106 @@ class _ConfirmationState extends State<Confirmation> {
       ),
     ));
   }
+<<<<<<< HEAD
+=======
+  //
+  //image sources
+
+  showImageSource(BuildContext context) async {
+    return await showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                  leading: const Icon(Icons.camera_alt),
+                  title: const Text('Camera'),
+                  onTap: () async {
+                    final image = await ImagePicker().pickImage(source: ImageSource.camera);
+                    if (image == null) {
+                      return;
+                    } else {
+                      setState(() {
+                        img.add(image);
+                      });
+                    }
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context);
+                  }),
+              ListTile(
+                leading: const Icon(Icons.image),
+                title: const Text('Gallery'),
+                onTap: () async {
+                  final List<XFile>? images = await ImagePicker().pickMultiImage();
+                  if (images == null) {
+                    return;
+                  } else {
+                    setState(() {
+                      img.addAll(images);
+                    });
+                  }
+                  // ignore: use_build_context_synchronously
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  //images collection
+
+  Widget getPickedImage(String path, int index) {
+    return Stack(
+      children: [
+        Container(
+          height: 60,
+          width: 60,
+          margin: const EdgeInsets.fromLTRB(3.0, 0, 3.0, 0),
+          child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(12)),
+              child: Image.file(
+                File(path),
+                fit: BoxFit.fill,
+              )),
+        ),
+        Positioned(
+            bottom: 0,
+            left: 32,
+            top: 28,
+            right: 0,
+            child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    img.removeAt(index);
+                  });
+                },
+                icon: const Icon(
+                  Icons.delete,
+                  color: Colors.red,
+                )))
+      ],
+    );
+  }
+
+  _showMsg(String msg, Icon icon) {
+    final snackBar = SnackBar(
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Text(
+              msg,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          icon
+        ],
+      ),
+      duration: const Duration(seconds: 2),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
 }

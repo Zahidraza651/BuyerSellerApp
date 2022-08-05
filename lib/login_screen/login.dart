@@ -1,9 +1,17 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:seller_side/constants.dart';
 import 'package:seller_side/models/user.dart';
 import 'package:seller_side/post_login/welcome.dart';
+=======
+import 'package:provider/provider.dart';
+import 'package:seller_side/constants.dart';
+import 'package:seller_side/models/user.dart';
+import 'package:seller_side/post_login/welcome.dart';
+import 'package:seller_side/provider/local_provider.dart';
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
 import 'package:seller_side/register_screen/registration.dart';
 import 'package:seller_side/widgets/app_button.dart';
 import 'package:seller_side/widgets/app_textfield.dart';
@@ -27,31 +35,96 @@ class _LoginScreenState extends State<LoginScreen> {
   String validationTxt = '';
   bool isLoading = false;
   bool isAuth = false;
+<<<<<<< HEAD
+=======
+  bool isEnable = true; //enable disable button
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
 
 //getting already logged in info
   void _checkIfLoggedIn() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
+<<<<<<< HEAD
     var token = localStorage.getString('token');
     if (token != null) {
       setState(() {
         isAuth = true;
       });
+=======
+    var userID = localStorage.getString('userid');
+    var savpassword = localStorage.getString('password');
+    if (userID != null && savpassword != null) {
+      setState(() {
+        isLoading = true;
+        isEnable = false;
+      });
+      String encodedJson = jsonEncode(<String, dynamic>{
+        'mobile': jsonDecode(userID),
+        'password': jsonDecode(savpassword),
+        'user_type': '1'
+      });
+      final response = await http.post(Uri.parse('$baseUrl/login'),
+          body: encodedJson,
+          headers: {'Accept': 'application/json', 'content-Type': 'application/json'});
+      setState(() {
+        isLoading = false;
+        isEnable = true;
+      });
+
+      if (response.statusCode == 200) {
+        UserData userData = UserData.fromjson(jsonDecode(response.body));
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Welcome(
+                      userData: userData,
+                    )));
+      } else {
+        _showMsg(
+            response.statusCode.toString(),
+            const Icon(
+              Icons.check,
+              color: Colors.green,
+            ));
+      }
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
     }
   }
 
 //loging in
+<<<<<<< HEAD
   Future login() async {
     setState(() => isLoading = true);
+=======
+  login() async {
+    setState(() {
+      isLoading = true;
+      isEnable = false;
+    });
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
     String encodedJson =
         jsonEncode(<String, dynamic>{'mobile': email.text, 'password': password.text, 'user_type': '1'});
     final response = await http.post(Uri.parse('$baseUrl/login'),
         body: encodedJson, headers: {'Accept': 'application/json', 'content-Type': 'application/json'});
+<<<<<<< HEAD
     setState(() => isLoading = false);
+=======
+    setState(() {
+      isLoading = false;
+      isEnable = true;
+    });
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
 
     if (response.statusCode == 200) {
       UserData userData = UserData.fromjson(jsonDecode(response.body));
       SharedPreferences localStorage = await SharedPreferences.getInstance();
+<<<<<<< HEAD
       await localStorage.setString('token', jsonEncode(userData.token));
+=======
+      localStorage.setString('userid', jsonEncode(email.text));
+      localStorage.setString('password', jsonEncode(password.text));
+
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
       // ignore: use_build_context_synchronously
       Navigator.pushReplacement(
           context,
@@ -69,10 +142,32 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+<<<<<<< HEAD
   @override
   void initState() {
     //_checkIfLoggedIn();
     super.initState();
+=======
+  //getting saved language by default
+
+  getLanguage() async {
+    SharedPreferences localstorage = await SharedPreferences.getInstance();
+    String? lang = localstorage.getString('lang');
+    // ignore: use_build_context_synchronously
+    final provider = Provider.of<LocaleProvider>(context, listen: false);
+    if (lang != null) {
+      provider.setLocale(Locale(lang));
+    } else {
+      provider.setLocale(const Locale('en'));
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getLanguage();
+    _checkIfLoggedIn();
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
   }
 
   @override
@@ -105,7 +200,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Row(
                                     children: [
                                       Padding(
+<<<<<<< HEAD
                                         padding: const EdgeInsets.only(left: 30.0),
+=======
+                                        padding: const EdgeInsets.only(left: 30.0, right: 30.0),
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
                                         child: Text(AppLocalizations.of(context)!
                                             .emailIDNumber), //Text('Email/ID Number'),
                                       )
@@ -125,7 +224,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Row(
                                     children: [
                                       Padding(
+<<<<<<< HEAD
                                         padding: const EdgeInsets.only(left: 30.0),
+=======
+                                        padding: const EdgeInsets.only(left: 30.0, right: 30.0),
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
                                         child: Text(
                                             AppLocalizations.of(context)!.password), //Text('Password'),
                                       )
@@ -153,6 +256,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         padding: const EdgeInsets.all(20.0),
                                         child: AppButton(
                                           color: const Color(0xff128383),
+<<<<<<< HEAD
                                           onpressed: () {
                                             if (email.text.isEmpty && password.text.isEmpty) {
                                               setState(() => validationTxt =
@@ -185,6 +289,42 @@ class _LoginScreenState extends State<LoginScreen> {
                                               login();
                                             }
                                           },
+=======
+                                          onpressed: isEnable
+                                              ? () {
+                                                  if (email.text.isEmpty && password.text.isEmpty) {
+                                                    setState(() => validationTxt =
+                                                        AppLocalizations.of(context)!.emailphone);
+                                                    _showMsg(
+                                                        validationTxt,
+                                                        const Icon(
+                                                          Icons.close,
+                                                          color: Colors.red,
+                                                        ));
+                                                  } else if (password.text.isEmpty) {
+                                                    setState(() => validationTxt =
+                                                        AppLocalizations.of(context)!.phoneOnly);
+                                                    _showMsg(
+                                                        validationTxt,
+                                                        const Icon(
+                                                          Icons.close,
+                                                          color: Colors.red,
+                                                        ));
+                                                  } else if (email.text.isEmpty) {
+                                                    setState(() => validationTxt =
+                                                        AppLocalizations.of(context)!.phoneorEmail);
+                                                    _showMsg(
+                                                        validationTxt,
+                                                        const Icon(
+                                                          Icons.close,
+                                                          color: Colors.red,
+                                                        ));
+                                                  } else {
+                                                    login();
+                                                  }
+                                                }
+                                              : null,
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
                                           text: AppLocalizations.of(context)!.login, //'Login',
                                           textColor: Colors.white,
                                         ),

@@ -3,6 +3,10 @@ import 'dart:io';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+<<<<<<< HEAD
+=======
+import 'package:image_picker/image_picker.dart';
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
 import 'package:seller_side/constants.dart';
 import 'package:seller_side/home_screen/home.dart';
 import 'package:seller_side/models/user.dart';
@@ -12,7 +16,11 @@ import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:seller_side/widgets/loader.dart';
 import '../widgets/app_button.dart';
 import 'package:permission_handler/permission_handler.dart';
+<<<<<<< HEAD
 import 'package:image_picker/image_picker.dart';
+=======
+import 'package:file_picker/file_picker.dart';
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
 import 'package:http/http.dart' as http;
 
 class RegisterData extends StatefulWidget {
@@ -165,7 +173,11 @@ class _RegisterDataState extends State<RegisterData> {
                               )
                             : ClipOval(
                                 child: Image.file(
+<<<<<<< HEAD
                                   img!,
+=======
+                                  File(img!.path),
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
                                   height: 80,
                                   width: 80,
                                   fit: BoxFit.fill,
@@ -173,6 +185,7 @@ class _RegisterDataState extends State<RegisterData> {
                               ),
                         onTap: () async {
                           await Permission.photos.request();
+<<<<<<< HEAD
 
                           var permissionStatus = await Permission.photos.status;
                           if (permissionStatus.isGranted) {
@@ -183,6 +196,12 @@ class _RegisterDataState extends State<RegisterData> {
                             setState(() {
                               img = File(image.path);
                             });
+=======
+                          var permissionStatus = await Permission.photos.status;
+                          if (permissionStatus.isGranted) {
+                            // ignore: use_build_context_synchronously
+                            await showImageSource(context);
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
                           } else {
                             _showMsg(
                                 'cant access your gallery',
@@ -329,6 +348,54 @@ class _RegisterDataState extends State<RegisterData> {
     ));
   }
 
+<<<<<<< HEAD
+=======
+  //image sources
+
+  showImageSource(BuildContext context) async {
+    return await showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                  leading: const Icon(Icons.camera_alt),
+                  title: const Text('Camera'),
+                  onTap: () async {
+                    final image = await ImagePicker().pickImage(source: ImageSource.camera);
+                    if (image == null) {
+                      return;
+                    } else {
+                      setState(() {
+                        img = File(image.path);
+                      });
+                    }
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context);
+                  }),
+              ListTile(
+                leading: const Icon(Icons.image),
+                title: const Text('Gallery'),
+                onTap: () async {
+                  final images = await ImagePicker().pickImage(source: ImageSource.gallery);
+                  if (images == null) {
+                    return;
+                  } else {
+                    setState(() {
+                      img = File(images.path);
+                    });
+                  }
+                  // ignore: use_build_context_synchronously
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        });
+  }
+
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
   //for shwing Error messages
   _showMsg(String msg, Icon icon) {
     final snackBar = SnackBar(

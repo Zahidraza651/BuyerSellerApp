@@ -26,12 +26,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+<<<<<<< HEAD
   TextEditingController _searchcontroller = TextEditingController();
   Color? buyerContainerColor = Colors.grey[300];
   Color? sellerContainerColor = Colors.black;
   Color? buyerTextColor = Colors.grey;
   Color? sellerTextColor = Colors.white;
   bool seller = true;
+=======
+  Color? buyerContainerColor = Colors.black;
+  Color? sellerContainerColor = Colors.grey[300];
+  Color? buyerTextColor = Colors.white;
+  Color? sellerTextColor = Colors.grey;
+  bool seller = false;
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
   String completed = '0';
   String pending = '0';
   String rejected = '0';
@@ -49,10 +57,17 @@ class _HomeScreenState extends State<HomeScreen> {
         'Authorization': 'Bearer $token',
       },
     );
+<<<<<<< HEAD
     if(mounted)setState(() => isLoading = false);
     if (response.statusCode == 200) {
       RequestStatus reqstatus = RequestStatus.fromjson(jsonDecode(response.body));
      if(mounted) setState(() {
+=======
+    setState(() => isLoading = false);
+    if (response.statusCode == 200) {
+      RequestStatus reqstatus = RequestStatus.fromjson(jsonDecode(response.body));
+      setState(() {
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
         completed = reqstatus.data.completed.toString();
         rejected = reqstatus.data.rejected.toString();
         pending = reqstatus.data.pending.toString();
@@ -66,6 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ));
     }
   }
+<<<<<<< HEAD
   Future<searchReqData> searchRequest(String request_id) async {
     var token = widget.userData!.token;
     final http.Response response = await http.post(Uri.parse('$baseUrl/search-request'),
@@ -92,6 +108,8 @@ class _HomeScreenState extends State<HomeScreen> {
       throw Exception('Server Error');
     }
   }
+=======
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
 
   @override
   void initState() {
@@ -125,7 +143,11 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Expanded(
                     child: Padding(
+<<<<<<< HEAD
                   padding: const EdgeInsets.only(left: 15.0),
+=======
+                  padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
                   child: Text(
                     widget.userData!.user!.name.toString(),
                     //AppLocalizations.of(context)!.aamirHussain, //'Aamir Hussain !',
@@ -295,7 +317,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       )),
                   onTap: () {
                     Navigator.push(
+<<<<<<< HEAD
                         context, MaterialPageRoute(builder: (context) => const RejectedScreen()));
+=======
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RequestStatusDetail(
+                                  status: '2',
+                                  title: AppLocalizations.of(context)!.rejected,
+                                  userdata: widget.userData!,
+                                )));
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
                   },
                 )),
               ],
@@ -342,7 +374,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       )),
                   onTap: () {
                     Navigator.push(
+<<<<<<< HEAD
                         context, MaterialPageRoute(builder: (context) => const CompletedScreen()));
+=======
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RequestStatusDetail(
+                                  status: '1',
+                                  title: AppLocalizations.of(context)!.completed,
+                                  userdata: widget.userData!,
+                                )));
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
                   },
                 )),
               ],
@@ -355,7 +397,11 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 children: [
                   Padding(
+<<<<<<< HEAD
                     padding: const EdgeInsets.only(left: 12.0),
+=======
+                    padding: const EdgeInsets.only(left: 12.0, right: 15),
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
                     child: Text(AppLocalizations.of(context)!.enterInvoice), //Text('Enter Invoice #'),
                   )
                 ],
@@ -369,9 +415,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: const EdgeInsets.all(10.0),
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width / 1.8,
+<<<<<<< HEAD
                             child:  ApptextField(
                               controller: _searchcontroller,
                             ),
+=======
+                            child: const ApptextField(),
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
                           )),
                       Expanded(
                           child: Padding(
@@ -382,6 +432,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 color: const Color(0xff128383),
                                 onpressed: () {
                                   //TODO code for search invoice
+<<<<<<< HEAD
                                   if (_searchcontroller.text.isNotEmpty) {
                                     setState(() {
                                       searchRequest(_searchcontroller.text);
@@ -396,6 +447,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                   }
                                   // Navigator.push(
                                   //     context, MaterialPageRoute(builder: (context) => const Invoice()));
+=======
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Invoice(
+                                                userdata: widget.userData!,
+                                              )));
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
                                 },
                               ))),
                     ],
