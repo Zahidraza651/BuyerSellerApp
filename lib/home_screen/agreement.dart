@@ -1,3 +1,12 @@
+<<<<<<< HEAD
+import 'package:flutter/material.dart';
+import 'package:seller_side/home_screen/confirmation.dart';
+import '../widgets/app_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
+
+class Agreement extends StatefulWidget {
+  const Agreement({Key? key}) : super(key: key);
+=======
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -14,12 +23,15 @@ import 'package:http/http.dart' as http;
 class Agreement extends StatefulWidget {
   final UserData userData;
   const Agreement({Key? key, required this.userData}) : super(key: key);
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
 
   @override
   State<Agreement> createState() => _AgreementState();
 }
 
 class _AgreementState extends State<Agreement> {
+<<<<<<< HEAD
+=======
   String agrrement = '';
   AgrrementTxt? agtext;
   bool isLoading = false;
@@ -93,6 +105,7 @@ class _AgreementState extends State<Agreement> {
     getAgreement();
   }
 
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -102,11 +115,15 @@ class _AgreementState extends State<Agreement> {
               backgroundColor: Colors.white,
               title: Text(
                 AppLocalizations.of(context)!.agreement, //'Agreement',
+<<<<<<< HEAD
+                style: const TextStyle(color: Colors.black),
+=======
                 style: const TextStyle(
                     color: Colors.black,
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.bold,
                     fontSize: 18),
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
               ),
               leading: IconButton(
                 color: Colors.black,
@@ -118,9 +135,13 @@ class _AgreementState extends State<Agreement> {
               actions: [
                 InkWell(
                   child: Image.asset('assets/share.png'),
+<<<<<<< HEAD
+                  onTap: () {},
+=======
                   onTap: () {
                     Share.share('sharing something');
                   },
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
                 )
               ],
             ),
@@ -146,6 +167,12 @@ class _AgreementState extends State<Agreement> {
                                     OutlineInputBorder(borderRadius: BorderRadius.circular(30.0))),
                             isExpanded: true,
                             isDense: true,
+<<<<<<< HEAD
+                            items: null,
+                            onChanged: null,
+                            //value: 'English',
+                            hint: const Text('English'),
+=======
                             value: langValue,
                             items: items.map((String items) {
                               return DropdownMenuItem(
@@ -168,6 +195,7 @@ class _AgreementState extends State<Agreement> {
                             },
                             //value: 'English',
                             //hint: const Text('English'),
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
                             icon: const Icon(
                               Icons.arrow_drop_down,
                               color: Colors.black,
@@ -181,11 +209,19 @@ class _AgreementState extends State<Agreement> {
                       height: 30.0,
                     ),
                     Row(
+<<<<<<< HEAD
+                      children: const [
+                        Expanded(
+                            child: Text(
+                          'Vestibulum blandit viverra convallis. Pellentesque ligula urna, fermentum ut semper in, tincidunt nec dui. Morbi mauris lacus, consequat eget justo in, semper gravida enim. Donec ultrices varius ligula. Ut non pretium augue. Etiam non rutrum metus. In varius sit amet lorem tempus sagittis. Cras sed maximus enim, vel ultricies tortor. Pellentesque consectetur tellus ornare felis porta dapibus. Etiam eget viverra ipsum, ac posuere massa. Nam vitae tempor metus. Donec rhoncus, metus ac convallis ultricies, turpis augue vestibulum elit, ut pharetra orci urna quis lectus. Praesent in libero non enim tincidunt imperdiet nec vitae urna. Morbi elementum non enim eget aliquet. Vivamus fermentum quam magna, ac cursus neque pulvinar feugiat. Nulla facilisi.Donec ultrices varius ligula. Ut non pretium augue. Etiam non rutrum metus. In varius sit amet lorem tempus sagittis. Cras sed maximus enim, vel ultricies tortor. Pellentesque consectetur tellus ornare felis porta dapibus.',
+                          style: TextStyle(
+=======
                       children: [
                         Expanded(
                             child: Text(
                           agrrement,
                           style: const TextStyle(
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
                               fontSize: 15.0, fontWeight: FontWeight.normal, color: Colors.grey),
                         ))
                       ],
@@ -219,10 +255,14 @@ class _AgreementState extends State<Agreement> {
                                   textColor: Colors.white,
                                   color: Colors.grey[400],
                                   onpressed: () {
+<<<<<<< HEAD
+                                    //TODO code for reject agreement
+=======
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => Welcome(userData: widget.userData)));
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
                                   },
                                 ))),
                       ],
@@ -232,6 +272,8 @@ class _AgreementState extends State<Agreement> {
               ),
             )));
   }
+<<<<<<< HEAD
+=======
 
   _showMsg(String msg, Icon icon) {
     final snackBar = SnackBar(
@@ -251,4 +293,5 @@ class _AgreementState extends State<Agreement> {
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
 }

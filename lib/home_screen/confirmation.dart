@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+import 'package:flutter/material.dart';
+=======
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
@@ -5,6 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
 import 'package:seller_side/widgets/alert.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import '../widgets/app_button.dart';
@@ -19,11 +23,16 @@ class Confirmation extends StatefulWidget {
 
 class _ConfirmationState extends State<Confirmation> {
   bool visible = false;
+<<<<<<< HEAD
+  @override
+  Widget build(BuildContext context) {
+=======
   List<XFile?> img = [];
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -160,6 +169,8 @@ class _ConfirmationState extends State<Confirmation> {
               const SizedBox(
                 height: 20.0,
               ),
+<<<<<<< HEAD
+=======
               Row(children: [
                 SizedBox(
                   width: width * 0.05,
@@ -239,6 +250,7 @@ class _ConfirmationState extends State<Confirmation> {
                   )
                 ],
               ),
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -268,6 +280,8 @@ class _ConfirmationState extends State<Confirmation> {
       ),
     ));
   }
+<<<<<<< HEAD
+=======
   //
   //image sources
 
@@ -367,4 +381,5 @@ class _ConfirmationState extends State<Confirmation> {
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
 }

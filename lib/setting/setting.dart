@@ -13,7 +13,11 @@ import 'package:toggle_switch/toggle_switch.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:http/http.dart' as http;
 import '../constants.dart';
+<<<<<<< HEAD
+import '../more/edit_profile.dart';
+=======
 import '../edit_profile/edit_profile.dart';
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
 
 class SettingScreen extends StatefulWidget {
   final UserData userData;
@@ -25,9 +29,13 @@ class SettingScreen extends StatefulWidget {
 
 class _SettingScreenState extends State<SettingScreen> {
   bool isLoading = false;
+<<<<<<< HEAD
+
+=======
   int labelindex = 0; //language switch index
 
 //logging out
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
   Future logOut() async {
     setState(() => isLoading = true);
     var token = widget.userData.token;
@@ -42,9 +50,13 @@ class _SettingScreenState extends State<SettingScreen> {
     setState(() => isLoading = false);
     if (response.statusCode == 200) {
       SharedPreferences localStorage = await SharedPreferences.getInstance();
+<<<<<<< HEAD
+      final success = localStorage.remove('token');
+=======
       final success = localStorage.remove('userid');
       final success2 = localStorage.remove('password');
 
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
       // ignore: use_build_context_synchronously
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
     } else {
@@ -77,6 +89,19 @@ class _SettingScreenState extends State<SettingScreen> {
             ),
             widget.userData.user!.photo != null
                 ? InkWell(
+<<<<<<< HEAD
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>Update_User(userData: widget.userData,)));
+              },
+                  child: CircleAvatar(
+                      radius: 40.0,
+                      backgroundImage: NetworkImage(widget.userData.user!.photo),
+                    ),
+                )
+                : const CircleAvatar(
+                    radius: 40.0,
+                    backgroundImage: AssetImage('assets/imagegirl.png'),
+=======
                     child: CircleAvatar(
                       radius: 40.0,
                       backgroundImage: NetworkImage(widget.userData.user!.photo),
@@ -96,6 +121,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       backgroundImage: AssetImage('assets/imagegirl.png'),
                     ),
                     onTap: () {},
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
                   ),
             Text(widget.userData.user!.name.toString()),
             Container(
@@ -140,6 +166,13 @@ class _SettingScreenState extends State<SettingScreen> {
                                   activeFgColor: Colors.white,
                                   inactiveBgColor: Colors.grey[100],
                                   inactiveFgColor: Colors.black,
+<<<<<<< HEAD
+                                  initialLabelIndex: 0,
+                                  totalSwitches: 2,
+                                  labels: const ['Eng', 'العربية'],
+                                  radiusStyle: true,
+                                  onToggle: (index) {
+=======
                                   initialLabelIndex: labelindex,
                                   totalSwitches: 2,
                                   labels: const ['Eng', 'العربية'],
@@ -148,18 +181,25 @@ class _SettingScreenState extends State<SettingScreen> {
                                     SharedPreferences localstorage =
                                         await SharedPreferences.getInstance();
                                     // ignore: use_build_context_synchronously
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
                                     final provider = Provider.of<LocaleProvider>(context, listen: false);
                                     if (index == 0) {
                                       setState(() {
                                         provider.setLocale(const Locale('en'));
+<<<<<<< HEAD
+=======
                                         labelindex = 0;
                                         localstorage.setString('lang', 'en');
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
                                       });
                                     } else {
                                       setState(() {
                                         provider.setLocale(const Locale('ar'));
+<<<<<<< HEAD
+=======
                                         labelindex = 1;
                                         localstorage.setString('lang', 'ar');
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
                                       });
                                     }
                                   },

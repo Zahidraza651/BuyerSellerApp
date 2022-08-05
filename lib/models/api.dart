@@ -11,6 +11,10 @@ class Network {
     token = jsonDecode(localStorage.getString('token')!)['token'];
   }
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> acfb8e063a2dd0639e4b385f4beea358d29ff1b7
   Future authData(data, apiUrl) async {
     var fullUrl = _url + apiUrl;
     return await http.post(Uri.parse(fullUrl), body: jsonEncode(data), headers: _setHeaders());
