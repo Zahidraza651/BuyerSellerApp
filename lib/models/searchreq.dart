@@ -1,3 +1,5 @@
+import 'package:seller_side/models/user.dart';
+
 class SearchReq {
   final String requestid;
 
@@ -37,8 +39,11 @@ class Data {
   int? deliveryMethod;
   var paymentMethod;
   String? paymentStatus;
+  String? deliveryCompany;
+  String? trackingNumber;
   int? sellerId;
-  var attachment;
+  List<ReqAttachments>? attachment;
+  User? buyer;
 
   Data(
       {required this.id,
@@ -53,26 +58,46 @@ class Data {
       required this.paymentMethod,
       required this.paymentStatus,
       required this.sellerId,
-      required this.attachment});
+      required this.attachment,
+      required this.buyer,
+      required this.deliveryCompany,
+      required this.trackingNumber});
 
-  Data.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    userId = json['user_id'];
-    itemType = json['item_type'];
-    price = json['price'];
-    details = json['details'];
-    status = json['status'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    deliveryMethod = json['delivery_method'];
-    paymentMethod = json['payment_method'];
-    paymentStatus = json['payment_status'];
-    sellerId = json['seller_id'];
-    if (json['attachment'] != null) {
-      attachment = <String>[];
-      json['attachment'].forEach((v) {
-        attachment!.add((v));
-      });
-    }
+  factory Data.fromJson(Map<String, dynamic> json) {
+    var attacmentsList = json['attachment'] as List;
+    return Data(
+      id: json['id'],
+      userId: json['user_id'],
+      itemType: json['item_type'],
+      price: json['price'],
+      details: json['details'],
+      status: json['status'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+      deliveryMethod: json['delivery_method'],
+      paymentMethod: json['payment_method'],
+      paymentStatus: json['payment_status'],
+      sellerId: json['seller_id'],
+      attachment: attacmentsList.map((e) => ReqAttachments.fromjson(e)).toList(),
+      buyer: User.fromjson(json['buyer']),
+      trackingNumber: json['delivery_tracking_no'],
+      deliveryCompany: json['delivery_company_name'],
+      // if (json['attachment'] != null) {
+      //   attachment = <String>[];
+      //   json['attachment'].forEach((v) {
+      //     attachment!.add((v));
+      //   });
+      // }
+    );
+  }
+}
+
+class ReqAttachments {
+  String? link;
+
+  ReqAttachments({required this.link});
+
+  factory ReqAttachments.fromjson(Map<String, dynamic> reqjson) {
+    return ReqAttachments(link: reqjson['name']);
   }
 }

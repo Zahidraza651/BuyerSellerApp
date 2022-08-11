@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,6 +13,7 @@ import '../constants.dart';
 import '../widgets/app_button.dart';
 import '../widgets/app_textfield.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker_web/image_picker_web.dart';
 
 class Update_User extends StatefulWidget {
   final UserData userData;
@@ -21,6 +24,7 @@ class Update_User extends StatefulWidget {
 }
 
 class _Update_UserState extends State<Update_User> {
+  Uint8List? webimg;
   TextEditingController fname = TextEditingController();
   TextEditingController gender = TextEditingController();
   TextEditingController language = TextEditingController();
@@ -44,10 +48,14 @@ class _Update_UserState extends State<Update_User> {
     request.fields['mobile'] = 'phone';
     request.fields['country_id'] = 'countryName';
     request.headers.addAll(headers);
-
-    var pic = await http.MultipartFile.fromPath('photo', img!.path);
-
-    request.files.add(pic);
+    if (kIsWeb) {
+      List<int> imgBytes = webimg!.cast();
+      var pic = http.MultipartFile.fromBytes('photo', imgBytes, filename: 'pic.png');
+      request.files.add(pic);
+    } else {
+      var pic = await http.MultipartFile.fromPath('photo', img!.path);
+      request.files.add(pic);
+    }
 
     final response = await request.send();
     setState(() => isLoading = false);
@@ -101,37 +109,70 @@ class _Update_UserState extends State<Update_User> {
             Align(
                 alignment: Alignment.bottomCenter,
                 child: InkWell(
-                  child: img == null
-                      ? ClipOval(
-                          child: Image.asset(
-                            'assets/profile.png',
-                            height: 80,
-                            width: 80,
-                            fit: BoxFit.fill,
-                          ),
-                        )
-                      : ClipOval(
-                          child: Image.file(
-                            img!,
-                            height: 80,
-                            width: 80,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
+                  child: Stack(
+                    children: (kIsWeb)
+                        ? [
+                            webimg == null
+                                ? ClipOval(
+                                    child: Image.asset(
+                                      'assets/profile.png',
+                                      height: 80,
+                                      width: 80,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  )
+                                : ClipOval(
+                                    child: Image.memory(
+                                      webimg!,
+                                      height: 80,
+                                      width: 80,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                            const Positioned(
+                                left: 60, right: 0, top: 60, bottom: 0, child: Icon(Icons.camera_alt))
+                          ]
+                        : [
+                            img == null
+                                ? ClipOval(
+                                    child: Image.asset(
+                                      'assets/profile.png',
+                                      height: 80,
+                                      width: 80,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  )
+                                : ClipOval(
+                                    child: Image.file(
+                                      File(img!.path),
+                                      height: 80,
+                                      width: 80,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                            const Positioned(
+                                left: 60, right: 0, top: 60, bottom: 0, child: Icon(Icons.camera_alt))
+                          ],
+                  ),
                   onTap: () async {
-                    await Permission.photos.request();
-                    var permissionStatus = await Permission.photos.status;
-                    if (permissionStatus.isGranted) {
-                      // ignore: use_build_context_synchronously
-                      await showImageSource(context);
+                    if (kIsWeb) {
+                      pickImageWeb();
                     } else {
-                      _showMsg(
-                          'cant access your gallery',
-                          const Icon(
-                            Icons.close,
-                            color: Colors.red,
-                          ));
+                      await showImageSource(context);
                     }
+                    // await Permission.photos.request();
+                    // var permissionStatus = await Permission.photos.status;
+                    // if (permissionStatus.isGranted) {
+                    //   // ignore: use_build_context_synchronously
+                    //   await showImageSource(context);
+                    // } else {
+                    //   _showMsg(
+                    //       'cant access your gallery',
+                    //       const Icon(
+                    //         Icons.close,
+                    //         color: Colors.red,
+                    //       ));
+                    // }
                   },
                 )),
             SizedBox(
@@ -203,18 +244,34 @@ class _Update_UserState extends State<Update_User> {
                   child: AppButton(
                     color: const Color(0xff128383),
                     onpressed: () {
-                      if (img != null &&
-                          fname.text.isNotEmpty &&
-                          gender.text.isNotEmpty &&
-                          language.text.isNotEmpty) {
-                        _updateUser();
+                      if (kIsWeb) {
+                        if (webimg != null &&
+                            fname.text.isNotEmpty &&
+                            gender.text.isNotEmpty &&
+                            language.text.isNotEmpty) {
+                          _updateUser();
+                        } else {
+                          _showMsg(
+                              'provide all fiels & pick an image',
+                              const Icon(
+                                Icons.close,
+                                color: Colors.red,
+                              ));
+                        }
                       } else {
-                        _showMsg(
-                            'provide all fiels & pick an image',
-                            const Icon(
-                              Icons.close,
-                              color: Colors.red,
-                            ));
+                        if (img != null &&
+                            fname.text.isNotEmpty &&
+                            gender.text.isNotEmpty &&
+                            language.text.isNotEmpty) {
+                          _updateUser();
+                        } else {
+                          _showMsg(
+                              'provide all fiels & pick an image',
+                              const Icon(
+                                Icons.close,
+                                color: Colors.red,
+                              ));
+                        }
                       }
 
                       // Navigator.push(
@@ -230,6 +287,14 @@ class _Update_UserState extends State<Update_User> {
         ),
       ),
     );
+  }
+
+  // pick image
+  pickImageWeb() async {
+    final imageweb = await ImagePickerWeb.getImageAsBytes();
+    setState(() {
+      webimg = imageweb;
+    });
   }
 
   //image sources

@@ -104,7 +104,8 @@
       "provideconfirmpassword" : "تأكيد كلمة المرور",
       "newconfirmpass" : "أدخل كلمة المرور الجديدة وتأكيدها",
       "passnotmatch" : "جديد & تأكيد كلمة المرور غير متطابقين",
-      "providevalidemail" : "أدخل بريدًا إلكترونيًا صالحًا"
+      "providevalidemail" : "أدخل بريدًا إلكترونيًا صالحًا",
+      "reqcompleted" : "تم قبول الطلب بالفعل"
      
 
 

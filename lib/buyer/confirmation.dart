@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
@@ -373,7 +372,7 @@ showAlertDialog(BuildContext context) {
           ),
           Text(
             AppLocalizations.of(context)!.invoice34,
-            style: const TextStyle(fontFamily: 'Roboto', fontSize: 16, color: const Color(0xFF1BA9E4)),
+            style: const TextStyle(fontFamily: 'Roboto', fontSize: 16, color: Color(0xFF1BA9E4)),
           ),
         ],
       ),
@@ -384,8 +383,7 @@ showAlertDialog(BuildContext context) {
         margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
         child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              shape: const RoundedRectangleBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(70))),
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(70))),
               primary: const Color(0xFF128383),
             ),
             onPressed: () {
@@ -393,7 +391,7 @@ showAlertDialog(BuildContext context) {
             },
             child: const Text(
               'Share Invoice Number',
-              style: const TextStyle(fontFamily: 'Roboto', fontSize: 14, fontWeight: FontWeight.bold),
+              style: TextStyle(fontFamily: 'Roboto', fontSize: 14, fontWeight: FontWeight.bold),
             )),
       ),
     ],

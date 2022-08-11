@@ -15,15 +15,15 @@ class Statuswidget extends StatefulWidget {
   final String detail;
   final UserData userData;
   final int reqID;
-  const Statuswidget(
-      {Key? key,
-      required this.detail,
-      required this.itemtype,
-      required this.price,
-      required this.status,
-      required this.userData,
-      required this.reqID})
-      : super(key: key);
+  const Statuswidget({
+    Key? key,
+    required this.detail,
+    required this.itemtype,
+    required this.price,
+    required this.status,
+    required this.userData,
+    required this.reqID,
+  }) : super(key: key);
 
   @override
   State<Statuswidget> createState() => _StatuswidgetState();
@@ -63,6 +63,34 @@ class _StatuswidgetState extends State<Statuswidget> {
                         style: const TextStyle(color: Colors.white),
                       ),
                     ))
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                    child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: Text(
+                    AppLocalizations.of(context)!.invoice34, //'Alert Title',
+                    style: const TextStyle(
+                        color: Color(0xFF969696), fontSize: 15.0, fontWeight: FontWeight.bold),
+                  ),
+                ))
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                    child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
+                  child: Text(
+                    widget.reqID.toString(), //'Alert Title',
+                    style: const TextStyle(
+                        color: Colors.black, fontSize: 15.0, fontWeight: FontWeight.bold),
+                  ),
+                ))
               ],
             ),
             Row(

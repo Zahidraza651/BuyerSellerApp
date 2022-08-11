@@ -90,20 +90,24 @@ class _HomeScreenState extends State<HomeScreen> {
     if (response.statusCode == 200) {
       SearchReqData requestData = SearchReqData.fromJson(json.decode(response.body));
       if (requestData.data != null) {
-        // showDialog(
-        //     context: context,
-        //     builder: (context) => AlertDialog(
-        //           title: Text(requestData.data!.id.toString()),
-        //           content: Text(requestData.data!.attachment.toString()),
-        //         ));
-        // ignore: use_build_context_synchronously
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Invoice(
-                      userdata: widget.userData!,
-                      searchData: requestData,
-                    )));
+        if (requestData.data!.status == 1) {
+          _showMsg(
+              // ignore: use_build_context_synchronously
+              AppLocalizations.of(context)!.reqcompleted,
+              const Icon(
+                Icons.check,
+                color: Colors.green,
+              ));
+        } else {
+          // ignore: use_build_context_synchronously
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Invoice(
+                        userdata: widget.userData!,
+                        searchData: requestData,
+                      )));
+        }
       } else {
         _showMsg(
             // ignore: use_build_context_synchronously

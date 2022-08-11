@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:seller_side/constants.dart';
 import 'package:seller_side/models/request.dart';
 import 'package:seller_side/models/user.dart';
@@ -14,6 +14,8 @@ import 'agreement.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:http/http.dart' as http;
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
+import 'package:flutter/foundation.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 
 class NewRequest extends StatefulWidget {
   final UserData userData;
@@ -24,8 +26,9 @@ class NewRequest extends StatefulWidget {
 }
 
 class _NewRequestState extends State<NewRequest> {
+  List<Uint8List> webimg = [];
   List<XFile?> img = [];
-  var imgPaths = [];
+  //var imgPaths = [];
   bool isLoading = false;
   bool isEnable = true;
   ImagePicker? imgPicker;
@@ -54,11 +57,20 @@ class _NewRequestState extends State<NewRequest> {
     request.fields['price'] = price.text;
     request.fields['details'] = detail.text;
     request.headers.addAll(headers);
-    if (img.isNotEmpty) {
+    //if (img.isNotEmpty) {
+    if (kIsWeb) {
+      for (var image in webimg) {
+        List<int> imgList = image.cast();
+        request.files.add(http.MultipartFile.fromBytes('photo[${webimg.indexOf(image)}]', imgList,
+            filename: 'photo${webimg.indexOf(image)}.png'));
+      }
+    } else {
       for (var image in img) {
-        request.files.add(await http.MultipartFile.fromPath('photo', image!.path));
+        request.files
+            .add(await http.MultipartFile.fromPath('photo[${img.indexOf(image)}]', image!.path));
       }
     }
+    //}
     final response = await request.send();
     setState(() {
       isLoading = false;
@@ -244,7 +256,12 @@ class _NewRequestState extends State<NewRequest> {
                                                   icon: const Icon(Icons.attach_file),
                                                   color: const Color(0xFF128383),
                                                   onPressed: () async {
-                                                    await showImageSource(context);
+                                                    if (kIsWeb) {
+                                                      pickImageWeb();
+                                                    } else {
+                                                      await showImageSource(context);
+                                                    }
+
                                                     // await Permission.photos.request();
                                                     // var permissionStatus =
                                                     //     await Permission.photos.status;
@@ -282,14 +299,23 @@ class _NewRequestState extends State<NewRequest> {
                                     height: 60,
                                     width: 60,
                                     margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
-                                    child: ListView.builder(
-                                        itemCount: img.length,
-                                        shrinkWrap: true,
-                                        primary: false,
-                                        scrollDirection: Axis.horizontal,
-                                        itemBuilder: (context, index) {
-                                          return getPickedImage(img[index]!.path, index);
-                                        }),
+                                    child: (kIsWeb)
+                                        ? ListView.builder(
+                                            itemCount: webimg.length,
+                                            shrinkWrap: true,
+                                            primary: false,
+                                            scrollDirection: Axis.horizontal,
+                                            itemBuilder: (context, index) {
+                                              return getPickedImageWeb(webimg[index], index);
+                                            })
+                                        : ListView.builder(
+                                            itemCount: img.length,
+                                            shrinkWrap: true,
+                                            primary: false,
+                                            scrollDirection: Axis.horizontal,
+                                            itemBuilder: (context, index) {
+                                              return getPickedImage(img[index]!.path, index);
+                                            }),
                                   ),
                                 ),
                               )
@@ -320,8 +346,15 @@ class _NewRequestState extends State<NewRequest> {
     );
   }
 
-  //image sources
+// pick image
+  pickImageWeb() async {
+    final imageweb = await ImagePickerWeb.getMultiImagesAsBytes();
+    setState(() {
+      webimg.addAll(imageweb!);
+    });
+  }
 
+  //image sources
   showImageSource(BuildContext context) async {
     return await showModalBottomSheet(
         context: context,
@@ -334,6 +367,7 @@ class _NewRequestState extends State<NewRequest> {
                   title: const Text('Camera'),
                   onTap: () async {
                     final image = await ImagePicker().pickImage(source: ImageSource.camera);
+
                     if (image == null) {
                       return;
                     } else {
@@ -363,6 +397,41 @@ class _NewRequestState extends State<NewRequest> {
             ],
           );
         });
+  }
+
+  //images collection
+
+  Widget getPickedImageWeb(Uint8List imageBytes, int index) {
+    return Stack(
+      children: [
+        Container(
+          height: 60,
+          width: 60,
+          margin: const EdgeInsets.fromLTRB(3.0, 0, 3.0, 0),
+          child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(12)),
+              child: Image.memory(
+                imageBytes,
+                fit: BoxFit.fill,
+              )),
+        ),
+        Positioned(
+            bottom: 0,
+            left: 32,
+            top: 28,
+            right: 0,
+            child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    webimg.removeAt(index);
+                  });
+                },
+                icon: const Icon(
+                  Icons.delete,
+                  color: Colors.red,
+                )))
+      ],
+    );
   }
 
   //images collection

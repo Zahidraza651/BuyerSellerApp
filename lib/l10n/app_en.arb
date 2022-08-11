@@ -42,7 +42,7 @@
      "byHand": "By Hand",
      "byPost": "By Post",
      "companyName": "Company Name",
-     "number": "Number",
+     "number": "Tracking Number",
      "areyousureyouwantToproceed": "Are you sure you want To proceed",
      "messages": "Messages",
      "confirm": "Confirm",
@@ -107,6 +107,7 @@
       "provideconfirmpassword" : "Confirm Password",
       "newconfirmpass" : "Provide New & confirm password",
       "passnotmatch" : "New & Confirm password didnot match",
-      "providevalidemail" : "Provide a valid email"
+      "providevalidemail" : "Provide a valid email",
+      "reqcompleted" : "Request already Accepted"
 
 }

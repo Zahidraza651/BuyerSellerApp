@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -19,6 +21,7 @@ import '../widgets/app_button.dart';
 import '../widgets/app_textfield.dart';
 import 'package:http/http.dart' as http;
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 
 class Confirmation extends StatefulWidget {
   final UserData userData;
@@ -30,6 +33,9 @@ class Confirmation extends StatefulWidget {
 }
 
 class _ConfirmationState extends State<Confirmation> {
+  List<Uint8List> webimg = [];
+  TextEditingController companyName = TextEditingController();
+  TextEditingController trackingNumber = TextEditingController();
   Color? byHand = Colors.black;
   Color byHandTxt = Colors.white;
   Color? byPost = Colors.grey[300];
@@ -50,7 +56,9 @@ class _ConfirmationState extends State<Confirmation> {
       'Authorization': 'Bearer $token',
     }, body: {
       'request_id': widget.searchData.data!.id.toString(),
-      'delivery_method': deliveryMethos.toString()
+      'delivery_method': deliveryMethos.toString(),
+      'delivery_company_name': companyName.text,
+      'delivery_tracking_no': trackingNumber.text,
     });
 
     if (response.statusCode == 200) {
@@ -227,11 +235,13 @@ class _ConfirmationState extends State<Confirmation> {
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
+                                  children: [
                                     Expanded(
                                       child: Padding(
-                                        padding: EdgeInsets.all(10.0),
-                                        child: ApptextField(),
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: ApptextField(
+                                          controller: companyName,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -247,11 +257,13 @@ class _ConfirmationState extends State<Confirmation> {
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
+                                  children: [
                                     Expanded(
                                       child: Padding(
-                                        padding: EdgeInsets.all(10.0),
-                                        child: ApptextField(),
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: ApptextField(
+                                          controller: trackingNumber,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -290,8 +302,12 @@ class _ConfirmationState extends State<Confirmation> {
                                               child: IconButton(
                                                 icon: const Icon(Icons.attach_file),
                                                 color: const Color(0xFF128383),
-                                                onPressed: () {
-                                                  showImageSource(context);
+                                                onPressed: () async {
+                                                  if (kIsWeb) {
+                                                    pickImageWeb();
+                                                  } else {
+                                                    await showImageSource(context);
+                                                  }
                                                   // await Permission.photos.request();
                                                   // var permissionStatus = await Permission.photos.status;
                                                   // if (permissionStatus.isGranted) {
@@ -328,14 +344,23 @@ class _ConfirmationState extends State<Confirmation> {
                                   height: 60,
                                   width: 60,
                                   margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
-                                  child: ListView.builder(
-                                      itemCount: img.length,
-                                      shrinkWrap: true,
-                                      primary: false,
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder: (context, index) {
-                                        return getPickedImage(img[index]!.path, index);
-                                      }),
+                                  child: (kIsWeb)
+                                      ? ListView.builder(
+                                          itemCount: webimg.length,
+                                          shrinkWrap: true,
+                                          primary: false,
+                                          scrollDirection: Axis.horizontal,
+                                          itemBuilder: (context, index) {
+                                            return getPickedImageWeb(webimg[index], index);
+                                          })
+                                      : ListView.builder(
+                                          itemCount: img.length,
+                                          shrinkWrap: true,
+                                          primary: false,
+                                          scrollDirection: Axis.horizontal,
+                                          itemBuilder: (context, index) {
+                                            return getPickedImage(img[index]!.path, index);
+                                          }),
                                 ),
                               ),
                             )
@@ -374,6 +399,14 @@ class _ConfirmationState extends State<Confirmation> {
     ));
   }
   //
+
+  // pick image
+  pickImageWeb() async {
+    final imageweb = await ImagePickerWeb.getMultiImagesAsBytes();
+    setState(() {
+      webimg.addAll(imageweb!);
+    });
+  }
   //image sources
 
   showImageSource(BuildContext context) async {
@@ -417,6 +450,40 @@ class _ConfirmationState extends State<Confirmation> {
             ],
           );
         });
+  }
+  //images collection
+
+  Widget getPickedImageWeb(Uint8List imageBytes, int index) {
+    return Stack(
+      children: [
+        Container(
+          height: 60,
+          width: 60,
+          margin: const EdgeInsets.fromLTRB(3.0, 0, 3.0, 0),
+          child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(12)),
+              child: Image.memory(
+                imageBytes,
+                fit: BoxFit.fill,
+              )),
+        ),
+        Positioned(
+            bottom: 0,
+            left: 32,
+            top: 28,
+            right: 0,
+            child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    webimg.removeAt(index);
+                  });
+                },
+                icon: const Icon(
+                  Icons.delete,
+                  color: Colors.red,
+                )))
+      ],
+    );
   }
 
   //images collection

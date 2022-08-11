@@ -71,8 +71,8 @@ class _InvoiceState extends State<Invoice> {
                                 color: widget.searchData.data!.status == 0
                                     ? const Color(0xffF4BD05)
                                     : widget.searchData.data!.status == 1
-                                        ? Color(0xff2CC91F)
-                                        : Color(0xffFF3B3B),
+                                        ? const Color(0xff2CC91F)
+                                        : const Color(0xffFF3B3B),
                                 borderRadius: BorderRadius.circular(20.0)),
                             child: Center(
                               child: Text(
@@ -101,7 +101,7 @@ class _InvoiceState extends State<Invoice> {
                             child: Center(
                               child: Text(
                                 'Request Date : ${DateFormat('MMM/dd/yyyy').format(DateTime.parse(widget.searchData.data!.createdAt.toString()))}',
-                                style: TextStyle(color: Colors.white, fontSize: 10.5),
+                                style: const TextStyle(color: Colors.white, fontSize: 10.5),
                               ),
                             )),
                       ),
@@ -168,11 +168,25 @@ class _InvoiceState extends State<Invoice> {
                     children: [
                       Expanded(
                           child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, 7, 0, 7),
+                        padding: const EdgeInsets.fromLTRB(0, 7, 0, 7),
                         child: Text(
                           "\$ ${widget.searchData.data!.price.toString()}", //'Alert Title',
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.black, fontSize: 15.0, fontWeight: FontWeight.bold),
+                        ),
+                      ))
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                          child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                        child: Text(
+                          AppLocalizations.of(context)!.details, //'Alert Title',
+                          style: const TextStyle(
+                              color: Color(0xFF969696), fontSize: 15.0, fontWeight: FontWeight.bold),
                         ),
                       ))
                     ],
@@ -184,7 +198,7 @@ class _InvoiceState extends State<Invoice> {
                           child: Text(
                         widget.searchData.data!.details.toString(),
                         //overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.black, fontSize: 12.0, fontWeight: FontWeight.normal),
                       ))
                     ],
@@ -200,243 +214,244 @@ class _InvoiceState extends State<Invoice> {
                             color: Color(0xFF969696),
                             fontWeight: FontWeight.bold),
                       )),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                          padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-                          child: Container(
-                            height: 60,
-                            width: 60,
-                            margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.all(const Radius.circular(12)),
-                              child: DottedBorder(
-                                color: const Color(0xFF128383),
-                                borderType: BorderType.RRect,
-                                radius: const Radius.circular(12),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      child: Center(
-                                        child: IconButton(
-                                          icon: const Icon(Icons.attach_file),
-                                          color: const Color(0xFF128383),
-                                          onPressed: () {
-                                            showImageSource(context);
-                                            // await Permission.photos.request();
-                                            // var permissionStatus = await Permission.photos.status;
-                                            // if (permissionStatus.isGranted) {
-                                            //   // ignore: use_build_context_synchronously
-                                            //   await showImageSource(context);
-                                            // } else {
-                                            //   _showMsg(
-                                            //       'cant access your gallery',
-                                            //       const Icon(
-                                            //         Icons.close,
-                                            //         color: Colors.red,
-                                            //       ));
-                                            // }
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Center(
-                                          child: Text(
-                                        AppLocalizations.of(context)!.attach,
-                                        style: const TextStyle(color: const Color(0xFF128383)),
-                                      )),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          )),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(2.0, 10.0, 5.0, 10.0),
-                          child: Container(
-                            height: 60,
-                            width: 60,
-                            margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
-                            child: ListView.builder(
-                                itemCount: img.length,
-                                shrinkWrap: true,
-                                primary: false,
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (context, index) {
-                                  return getPickedImage(img[index]!.path, index);
-                                }),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, height * 0.02, 0, 0),
-                    child: Divider(
-                      color: Colors.black.withOpacity(0.15),
-                      thickness: 1,
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(15.0),
-                    margin: const EdgeInsets.only(top: 15.0),
-                    //height: 170,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    child: Column(
+                  SizedBox(
+                    height: 60,
+                    child: Row(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                                child: Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              child: Text(
-                                AppLocalizations.of(context)!.deliveryMethod, //'Alert Title',
-                                style: const TextStyle(
-                                    color: Color(0xFF969696),
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ))
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                                child: Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
-                              child: Text(
-                                widget.searchData.data!.deliveryMethod.toString(), //'Alert Title',
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 15.0, fontWeight: FontWeight.bold),
-                              ),
-                            ))
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                                child: Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
-                              child: Text(
-                                AppLocalizations.of(context)!.company, //'Alert Title',
-                                style: const TextStyle(
-                                    color: Color(0xFF969696),
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ))
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                                child: Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
-                              child: Text(
-                                AppLocalizations.of(context)!.companyName, //'Alert Title',
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 15.0, fontWeight: FontWeight.bold),
-                              ),
-                            ))
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                                child: Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
-                              child: Text(
-                                AppLocalizations.of(context)!.number, //'Alert Title',
-                                style: const TextStyle(
-                                    color: Color(0xFF969696),
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ))
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            Expanded(
-                                child: Padding(
-                              padding: EdgeInsets.fromLTRB(0, 7, 0, 0),
-                              child: Text(
-                                "355663467", //'Alert Title',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 15.0, fontWeight: FontWeight.bold),
-                              ),
-                            ))
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              width: MediaQuery.of(context).size.width * 0.16,
-                              margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
-                              child: ClipRRect(
-                                borderRadius: const BorderRadius.all(Radius.circular(12)),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(Radius.circular(12)),
-                                    color: const Color(0xFF128383).withOpacity(0.15),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: width * 0.03,
-                            ),
-                            Container(
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              width: MediaQuery.of(context).size.width * 0.16,
-                              margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
-                              child: ClipRRect(
-                                borderRadius: const BorderRadius.all(Radius.circular(12)),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(Radius.circular(12)),
-                                    color: const Color(0xFF128383).withOpacity(0.15),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: width * 0.03,
-                            ),
-                            Container(
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              width: MediaQuery.of(context).size.width * 0.16,
-                              margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
-                              child: ClipRRect(
-                                borderRadius: const BorderRadius.all(Radius.circular(12)),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(Radius.circular(12)),
-                                    color: const Color(0xFF128383).withOpacity(0.15),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        Expanded(
+                            child: ListView.builder(
+                                itemCount: widget.searchData.data!.attachment!.length,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                primary: false,
+                                itemBuilder: (context, index) {
+                                  return showImages(widget.searchData.data!.attachment![index].link!);
+                                }))
                       ],
                     ),
                   ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.start,
+                  //   children: [
+                  //     Padding(
+                  //         padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+                  //         child: Container(
+                  //           height: 60,
+                  //           width: 60,
+                  //           margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
+                  //           child: ClipRRect(
+                  //             borderRadius: const BorderRadius.all(const Radius.circular(12)),
+                  //             child: DottedBorder(
+                  //               color: const Color(0xFF128383),
+                  //               borderType: BorderType.RRect,
+                  //               radius: const Radius.circular(12),
+                  //               child: Column(
+                  //                 mainAxisAlignment: MainAxisAlignment.center,
+                  //                 children: [
+                  //                   Expanded(
+                  //                     child: Center(
+                  //                       child: IconButton(
+                  //                         icon: const Icon(Icons.attach_file),
+                  //                         color: const Color(0xFF128383),
+                  //                         onPressed: () {
+                  //                           showImageSource(context);
+                  //                           // await Permission.photos.request();
+                  //                           // var permissionStatus = await Permission.photos.status;
+                  //                           // if (permissionStatus.isGranted) {
+                  //                           //   // ignore: use_build_context_synchronously
+                  //                           //   await showImageSource(context);
+                  //                           // } else {
+                  //                           //   _showMsg(
+                  //                           //       'cant access your gallery',
+                  //                           //       const Icon(
+                  //                           //         Icons.close,
+                  //                           //         color: Colors.red,
+                  //                           //       ));
+                  //                           // }
+                  //                         },
+                  //                       ),
+                  //                     ),
+                  //                   ),
+                  //                   Expanded(
+                  //                     child: Center(
+                  //                         child: Text(
+                  //                       AppLocalizations.of(context)!.attach,
+                  //                       style: const TextStyle(color: const Color(0xFF128383)),
+                  //                     )),
+                  //                   )
+                  //                 ],
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         )),
+                  //     Expanded(
+                  //       child: Padding(
+                  //         padding: const EdgeInsets.fromLTRB(2.0, 10.0, 5.0, 10.0),
+                  //         child: Container(
+                  //           height: 60,
+                  //           width: 60,
+                  //           margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
+                  //           child: ListView.builder(
+                  //               itemCount: img.length,
+                  //               shrinkWrap: true,
+                  //               primary: false,
+                  //               scrollDirection: Axis.horizontal,
+                  //               itemBuilder: (context, index) {
+                  //                 return getPickedImage(img[index]!.path, index);
+                  //               }),
+                  //         ),
+                  //       ),
+                  //     )
+                  //   ],
+                  // ),
+                  Visibility(
+                      visible: widget.searchData.data!.status == 1 ? true : false,
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.fromLTRB(0, height * 0.02, 0, 0),
+                            child: Divider(
+                              color: Colors.black.withOpacity(0.15),
+                              thickness: 1,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(15.0),
+                            margin: const EdgeInsets.only(top: 15.0),
+                            //height: 170,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                        child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                      child: Text(
+                                        AppLocalizations.of(context)!.deliveryMethod, //'Alert Title',
+                                        style: const TextStyle(
+                                            color: Color(0xFF969696),
+                                            fontSize: 15.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ))
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                        child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
+                                      child: Text(
+                                        widget.searchData.data!.deliveryMethod == 0
+                                            ? AppLocalizations.of(context)!.byHand
+                                            : AppLocalizations.of(context)!.byPost, //'Alert Title',
+                                        style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 15.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ))
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                        child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
+                                      child: Text(
+                                        AppLocalizations.of(context)!.company, //'Alert Title',
+                                        style: const TextStyle(
+                                            color: Color(0xFF969696),
+                                            fontSize: 15.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ))
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                        child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
+                                      child: Text(
+                                        widget.searchData.data!.deliveryCompany == null
+                                            ? ''
+                                            : widget.searchData.data!.deliveryCompany
+                                                .toString(), //'Alert Title',
+                                        style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 15.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ))
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                        child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
+                                      child: Text(
+                                        AppLocalizations.of(context)!.number, //'Alert Title',
+                                        style: const TextStyle(
+                                            color: Color(0xFF969696),
+                                            fontSize: 15.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ))
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                        child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
+                                      child: Text(
+                                        widget.searchData.data!.trackingNumber == null
+                                            ? ''
+                                            : widget.searchData.data!.trackingNumber
+                                                .toString(), //'Alert Title',
+                                        style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 15.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ))
+                                  ],
+                                ),
+                                // SizedBox(
+                                //   height: 60,
+                                //   child: Row(
+                                //     children: [
+                                //       Expanded(
+                                //           child: ListView.builder(
+                                //               itemCount: widget.searchData.data!.attachment!.length,
+                                //               shrinkWrap: true,
+                                //               scrollDirection: Axis.horizontal,
+                                //               primary: false,
+                                //               itemBuilder: (context, index) {
+                                //                 return showImages(
+                                //                     widget.searchData.data!.attachment![index].link!);
+                                //               }))
+                                //     ],
+                                //   ),
+                                // )
+                              ],
+                            ),
+                          ),
+                        ],
+                      )),
                   const SizedBox(
                     height: 2,
                   ),
@@ -548,6 +563,21 @@ class _InvoiceState extends State<Invoice> {
                   color: Colors.red,
                 )))
       ],
+    );
+  }
+
+  //showing images
+  Widget showImages(String imageUrl) {
+    return Container(
+      height: 60,
+      width: 60,
+      margin: const EdgeInsets.fromLTRB(3.0, 0, 3.0, 0),
+      child: ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(12)),
+          child: Image.network(
+            imageUrl,
+            fit: BoxFit.fill,
+          )),
     );
   }
 

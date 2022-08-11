@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:seller_side/constants.dart';
@@ -13,6 +14,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/foundation.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 
 class RegisterData extends StatefulWidget {
   final String phone;
@@ -24,6 +26,7 @@ class RegisterData extends StatefulWidget {
 }
 
 class _RegisterDataState extends State<RegisterData> {
+  Uint8List? webimg;
   TextEditingController fName = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController iqama = TextEditingController();
@@ -48,10 +51,14 @@ class _RegisterDataState extends State<RegisterData> {
     request.fields['mobile'] = widget.phone;
     request.fields['country_id'] = widget.countryName;
     request.headers.addAll(headers);
-
-    var pic = await http.MultipartFile.fromPath('photo', img!.path);
-
-    request.files.add(pic);
+    if (kIsWeb) {
+      List<int> imgBytes = webimg!.cast();
+      var pic = http.MultipartFile.fromBytes('photo', imgBytes, filename: 'pic.png');
+      request.files.add(pic);
+    } else {
+      var pic = await http.MultipartFile.fromPath('photo', img!.path);
+      request.files.add(pic);
+    }
 
     final response = await request.send();
     setState(() => isLoading = false);
@@ -158,30 +165,64 @@ class _RegisterDataState extends State<RegisterData> {
                       alignment: Alignment.bottomCenter,
                       child: InkWell(
                         child: Stack(
-                          children: [
-                            img == null
-                                ? ClipOval(
-                                    child: Image.asset(
-                                      'assets/profile.png',
-                                      height: 80,
-                                      width: 80,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  )
-                                : ClipOval(
-                                    child: Image.file(
-                                      File(img!.path),
-                                      height: 80,
-                                      width: 80,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                            const Positioned(
-                                left: 60, right: 0, top: 60, bottom: 0, child: Icon(Icons.camera_alt))
-                          ],
+                          children: (kIsWeb)
+                              ? [
+                                  webimg == null
+                                      ? ClipOval(
+                                          child: Image.asset(
+                                            'assets/profile.png',
+                                            height: 80,
+                                            width: 80,
+                                            fit: BoxFit.fill,
+                                          ),
+                                        )
+                                      : ClipOval(
+                                          child: Image.memory(
+                                            webimg!,
+                                            height: 80,
+                                            width: 80,
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                  const Positioned(
+                                      left: 60,
+                                      right: 0,
+                                      top: 60,
+                                      bottom: 0,
+                                      child: Icon(Icons.camera_alt))
+                                ]
+                              : [
+                                  img == null
+                                      ? ClipOval(
+                                          child: Image.asset(
+                                            'assets/profile.png',
+                                            height: 80,
+                                            width: 80,
+                                            fit: BoxFit.fill,
+                                          ),
+                                        )
+                                      : ClipOval(
+                                          child: Image.file(
+                                            File(img!.path),
+                                            height: 80,
+                                            width: 80,
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                  const Positioned(
+                                      left: 60,
+                                      right: 0,
+                                      top: 60,
+                                      bottom: 0,
+                                      child: Icon(Icons.camera_alt))
+                                ],
                         ),
                         onTap: () async {
-                          await showImageSource(context);
+                          if (kIsWeb) {
+                            pickImageWeb();
+                          } else {
+                            await showImageSource(context);
+                          }
                           // await Permission.photos.request();
                           // var permissionStatus = await Permission.photos.status;
                           // if (permissionStatus.isGranted) {
@@ -299,19 +340,36 @@ class _RegisterDataState extends State<RegisterData> {
                                 child: AppButton(
                                   color: const Color(0xff128383),
                                   onpressed: () {
-                                    if (img != null &&
-                                        fName.text.isNotEmpty &&
-                                        email.text.isNotEmpty &&
-                                        iqama.text.isNotEmpty &&
-                                        password.text.isNotEmpty) {
-                                      _registerUser();
+                                    if (kIsWeb) {
+                                      if (webimg != null &&
+                                          fName.text.isNotEmpty &&
+                                          email.text.isNotEmpty &&
+                                          iqama.text.isNotEmpty &&
+                                          password.text.isNotEmpty) {
+                                        _registerUser();
+                                      } else {
+                                        _showMsg(
+                                            'provide all fiels & pick an image',
+                                            const Icon(
+                                              Icons.close,
+                                              color: Colors.red,
+                                            ));
+                                      }
                                     } else {
-                                      _showMsg(
-                                          'provide all fiels & pick an image',
-                                          const Icon(
-                                            Icons.close,
-                                            color: Colors.red,
-                                          ));
+                                      if (img != null &&
+                                          fName.text.isNotEmpty &&
+                                          email.text.isNotEmpty &&
+                                          iqama.text.isNotEmpty &&
+                                          password.text.isNotEmpty) {
+                                        _registerUser();
+                                      } else {
+                                        _showMsg(
+                                            'provide all fiels & pick an image',
+                                            const Icon(
+                                              Icons.close,
+                                              color: Colors.red,
+                                            ));
+                                      }
                                     }
 
                                     // Navigator.push(
@@ -331,6 +389,14 @@ class _RegisterDataState extends State<RegisterData> {
         ),
       )),
     )));
+  }
+
+  // pick image
+  pickImageWeb() async {
+    final imageweb = await ImagePickerWeb.getImageAsBytes();
+    setState(() {
+      webimg = imageweb;
+    });
   }
 
   //image sources
