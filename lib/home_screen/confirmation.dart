@@ -21,7 +21,7 @@ import '../widgets/app_button.dart';
 import '../widgets/app_textfield.dart';
 import 'package:http/http.dart' as http;
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
-import 'package:image_picker_web/image_picker_web.dart';
+//import 'package:image_picker_web/image_picker_web.dart';
 
 class Confirmation extends StatefulWidget {
   final UserData userData;
@@ -50,18 +50,33 @@ class _ConfirmationState extends State<Confirmation> {
   Future setDeliveryMethod() async {
     setState(() => isLoading = true);
     var token = widget.userData.token;
-    final response = await http.post(Uri.parse('$baseUrl/update-request'), headers: {
-      //'content-Type': 'application/json',
+    Map<String, String> headers = {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
-    }, body: {
-      'request_id': widget.searchData.data!.id.toString(),
-      'delivery_method': deliveryMethos.toString(),
-      'delivery_company_name': companyName.text,
-      'delivery_tracking_no': trackingNumber.text,
-    });
+    };
 
+    var request = http.MultipartRequest('POST', Uri.parse('$baseUrl/update-request'));
+    request.fields['request_id'] = widget.searchData.data!.id.toString();
+    request.fields['delivery_method'] = deliveryMethos.toString();
+    request.fields['delivery_company_name'] = companyName.text;
+    request.fields['delivery_tracking_no'] = trackingNumber.text;
+    if (kIsWeb) {
+      for (var image in webimg) {
+        List<int> imgList = image.cast();
+        request.files.add(http.MultipartFile.fromBytes(
+            'delivery_docs[${webimg.indexOf(image)}]', imgList,
+            filename: 'photo${webimg.indexOf(image)}.png'));
+      }
+    } else {
+      for (var image in img) {
+        request.files
+            .add(await http.MultipartFile.fromPath('delivery_docs[${img.indexOf(image)}]', image!.path));
+      }
+    }
+    request.headers.addAll(headers);
+    final response = await request.send();
     if (response.statusCode == 200) {
+      //final resMultipart = jsonDecode(String.fromCharCodes(await response.stream.toBytes()));
       final res = await http.post(
           Uri.parse(
               '$baseUrl/update-request?request_id=${widget.searchData.data!.id}&seller_id=${widget.userData.user!.userid.toString()}'),
@@ -86,6 +101,7 @@ class _ConfirmationState extends State<Confirmation> {
               context, MaterialPageRoute(builder: (context) => Welcome(userData: widget.userData)));
         } else {
           _showMsg(
+              // ignore: use_build_context_synchronously
               AppLocalizations.of(context)!.failtoacceptrequest,
               const Icon(
                 Icons.check,
@@ -402,10 +418,10 @@ class _ConfirmationState extends State<Confirmation> {
 
   // pick image
   pickImageWeb() async {
-    final imageweb = await ImagePickerWeb.getMultiImagesAsBytes();
-    setState(() {
-      webimg.addAll(imageweb!);
-    });
+    // final imageweb = await ImagePickerWeb.getMultiImagesAsBytes();
+    // setState(() {
+    //   webimg.addAll(imageweb!);
+    // });
   }
   //image sources
 

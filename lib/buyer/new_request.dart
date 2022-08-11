@@ -15,7 +15,7 @@ import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:http/http.dart' as http;
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/foundation.dart';
-import 'package:image_picker_web/image_picker_web.dart';
+//import 'package:image_picker_web/image_picker_web.dart';
 
 class NewRequest extends StatefulWidget {
   final UserData userData;
@@ -330,7 +330,18 @@ class _NewRequestState extends State<NewRequest> {
                                   color: const Color(0xff128383),
                                   onpressed: isEnable
                                       ? () {
-                                          makeNewRequest();
+                                          if (itemtype.text.isNotEmpty &&
+                                              price.text.isNotEmpty &&
+                                              detail.text.isNotEmpty) {
+                                            makeNewRequest();
+                                          } else {
+                                            _showMsg(
+                                                AppLocalizations.of(context)!.allfields,
+                                                Icon(
+                                                  Icons.close,
+                                                  color: Colors.red,
+                                                ));
+                                          }
                                         }
                                       : null,
                                   text: AppLocalizations.of(context)!.proceedtoAgreement,
@@ -348,10 +359,10 @@ class _NewRequestState extends State<NewRequest> {
 
 // pick image
   pickImageWeb() async {
-    final imageweb = await ImagePickerWeb.getMultiImagesAsBytes();
-    setState(() {
-      webimg.addAll(imageweb!);
-    });
+    // final imageweb = await ImagePickerWeb.getMultiImagesAsBytes();
+    // setState(() {
+    //   webimg.addAll(imageweb!);
+    // });
   }
 
   //image sources

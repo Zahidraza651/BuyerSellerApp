@@ -13,7 +13,7 @@ import '../constants.dart';
 import '../widgets/app_button.dart';
 import '../widgets/app_textfield.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker_web/image_picker_web.dart';
+//import 'package:image_picker_web/image_picker_web.dart';
 
 class Update_User extends StatefulWidget {
   final UserData userData;
@@ -291,10 +291,10 @@ class _Update_UserState extends State<Update_User> {
 
   // pick image
   pickImageWeb() async {
-    final imageweb = await ImagePickerWeb.getImageAsBytes();
-    setState(() {
-      webimg = imageweb;
-    });
+    // final imageweb = await ImagePickerWeb.getImageAsBytes();
+    // setState(() {
+    //   webimg = imageweb;
+    // });
   }
 
   //image sources

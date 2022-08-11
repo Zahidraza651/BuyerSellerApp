@@ -1,17 +1,16 @@
 import 'dart:io';
 import 'package:intl/intl.dart' show DateFormat;
-import 'package:dotted_border/dotted_border.dart';
-import 'package:file_picker/file_picker.dart';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
+
 import 'package:seller_side/home_screen/agreement.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:seller_side/models/searchreq.dart';
 import 'package:seller_side/models/user.dart';
 import 'package:seller_side/post_login/welcome.dart';
 import '../widgets/app_button.dart';
-import 'invoice.dart';
+
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 class Invoice extends StatefulWidget {
@@ -230,80 +229,6 @@ class _InvoiceState extends State<Invoice> {
                       ],
                     ),
                   ),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.start,
-                  //   children: [
-                  //     Padding(
-                  //         padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-                  //         child: Container(
-                  //           height: 60,
-                  //           width: 60,
-                  //           margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
-                  //           child: ClipRRect(
-                  //             borderRadius: const BorderRadius.all(const Radius.circular(12)),
-                  //             child: DottedBorder(
-                  //               color: const Color(0xFF128383),
-                  //               borderType: BorderType.RRect,
-                  //               radius: const Radius.circular(12),
-                  //               child: Column(
-                  //                 mainAxisAlignment: MainAxisAlignment.center,
-                  //                 children: [
-                  //                   Expanded(
-                  //                     child: Center(
-                  //                       child: IconButton(
-                  //                         icon: const Icon(Icons.attach_file),
-                  //                         color: const Color(0xFF128383),
-                  //                         onPressed: () {
-                  //                           showImageSource(context);
-                  //                           // await Permission.photos.request();
-                  //                           // var permissionStatus = await Permission.photos.status;
-                  //                           // if (permissionStatus.isGranted) {
-                  //                           //   // ignore: use_build_context_synchronously
-                  //                           //   await showImageSource(context);
-                  //                           // } else {
-                  //                           //   _showMsg(
-                  //                           //       'cant access your gallery',
-                  //                           //       const Icon(
-                  //                           //         Icons.close,
-                  //                           //         color: Colors.red,
-                  //                           //       ));
-                  //                           // }
-                  //                         },
-                  //                       ),
-                  //                     ),
-                  //                   ),
-                  //                   Expanded(
-                  //                     child: Center(
-                  //                         child: Text(
-                  //                       AppLocalizations.of(context)!.attach,
-                  //                       style: const TextStyle(color: const Color(0xFF128383)),
-                  //                     )),
-                  //                   )
-                  //                 ],
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         )),
-                  //     Expanded(
-                  //       child: Padding(
-                  //         padding: const EdgeInsets.fromLTRB(2.0, 10.0, 5.0, 10.0),
-                  //         child: Container(
-                  //           height: 60,
-                  //           width: 60,
-                  //           margin: EdgeInsets.fromLTRB(0, height * 0.015, 0, 0),
-                  //           child: ListView.builder(
-                  //               itemCount: img.length,
-                  //               shrinkWrap: true,
-                  //               primary: false,
-                  //               scrollDirection: Axis.horizontal,
-                  //               itemBuilder: (context, index) {
-                  //                 return getPickedImage(img[index]!.path, index);
-                  //               }),
-                  //         ),
-                  //       ),
-                  //     )
-                  //   ],
-                  // ),
                   Visibility(
                       visible: widget.searchData.data!.status == 1 ? true : false,
                       child: Column(
@@ -430,23 +355,23 @@ class _InvoiceState extends State<Invoice> {
                                     ))
                                   ],
                                 ),
-                                // SizedBox(
-                                //   height: 60,
-                                //   child: Row(
-                                //     children: [
-                                //       Expanded(
-                                //           child: ListView.builder(
-                                //               itemCount: widget.searchData.data!.attachment!.length,
-                                //               shrinkWrap: true,
-                                //               scrollDirection: Axis.horizontal,
-                                //               primary: false,
-                                //               itemBuilder: (context, index) {
-                                //                 return showImages(
-                                //                     widget.searchData.data!.attachment![index].link!);
-                                //               }))
-                                //     ],
-                                //   ),
-                                // )
+                                SizedBox(
+                                  height: 60,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          child: ListView.builder(
+                                              itemCount: widget.searchData.data!.deliveryDocs!.length,
+                                              shrinkWrap: true,
+                                              scrollDirection: Axis.horizontal,
+                                              primary: false,
+                                              itemBuilder: (context, index) {
+                                                return showImages(
+                                                    widget.searchData.data!.deliveryDocs![index].link!);
+                                              }))
+                                    ],
+                                  ),
+                                )
                               ],
                             ),
                           ),

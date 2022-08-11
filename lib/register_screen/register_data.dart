@@ -14,7 +14,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/foundation.dart';
-import 'package:image_picker_web/image_picker_web.dart';
+//import 'package:image_picker_web/image_picker_web.dart';
 
 class RegisterData extends StatefulWidget {
   final String phone;
@@ -393,10 +393,10 @@ class _RegisterDataState extends State<RegisterData> {
 
   // pick image
   pickImageWeb() async {
-    final imageweb = await ImagePickerWeb.getImageAsBytes();
-    setState(() {
-      webimg = imageweb;
-    });
+    // final imageweb = await ImagePickerWeb.getImageAsBytes();
+    // setState(() {
+    //   webimg = imageweb;
+    // });
   }
 
   //image sources

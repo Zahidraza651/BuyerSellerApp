@@ -43,6 +43,7 @@ class Data {
   String? trackingNumber;
   int? sellerId;
   List<ReqAttachments>? attachment;
+  List<ReqAttachments>? deliveryDocs;
   User? buyer;
 
   Data(
@@ -61,10 +62,12 @@ class Data {
       required this.attachment,
       required this.buyer,
       required this.deliveryCompany,
-      required this.trackingNumber});
+      required this.trackingNumber,
+      required this.deliveryDocs});
 
   factory Data.fromJson(Map<String, dynamic> json) {
     var attacmentsList = json['attachment'] as List;
+    var deliverylist = json['delivery_docs'] as List;
     return Data(
       id: json['id'],
       userId: json['user_id'],
@@ -79,6 +82,7 @@ class Data {
       paymentStatus: json['payment_status'],
       sellerId: json['seller_id'],
       attachment: attacmentsList.map((e) => ReqAttachments.fromjson(e)).toList(),
+      deliveryDocs: deliverylist.map((d) => ReqAttachments.fromjson(d)).toList(),
       buyer: User.fromjson(json['buyer']),
       trackingNumber: json['delivery_tracking_no'],
       deliveryCompany: json['delivery_company_name'],
