@@ -9,6 +9,7 @@ import 'package:seller_side/post_login/welcome.dart';
 import 'package:seller_side/widgets/app_textfield.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:seller_side/widgets/loader.dart';
+import '../login_screen/login.dart';
 import '../widgets/app_button.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
@@ -135,7 +136,10 @@ class _RegisterDataState extends State<RegisterData> {
                                     child: Visibility(
                                         child: IconButton(
                                       onPressed: () {
-                                        Navigator.pop(context);
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => const LoginScreen()));
                                       },
                                       icon: const Icon(
                                         Icons.arrow_back,

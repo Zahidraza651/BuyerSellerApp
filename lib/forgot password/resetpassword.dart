@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:http/http.dart' as http;
@@ -66,10 +66,20 @@ class _ResetPasswordState extends State<ResetPassword> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: SingleChildScrollView(
+          body: DoubleBackToCloseApp(
+        snackBar: SnackBar(
+          content: Text(AppLocalizations.of(context)!.backagaintoexit),
+        ),
+        child: SingleChildScrollView(
           child: Column(
             children: [
-              AppHeader(visible: true, text: AppLocalizations.of(context)!.reset),
+              AppHeader(
+                visible: true,
+                text: AppLocalizations.of(context)!.reset,
+                dothis: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+                },
+              ),
               const SizedBox(
                 height: 30.0,
               ),
@@ -204,7 +214,7 @@ class _ResetPasswordState extends State<ResetPassword> {
             ],
           ),
         ),
-      ),
+      )),
     );
   }
 

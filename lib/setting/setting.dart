@@ -1,12 +1,12 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:seller_side/login_screen/login.dart';
 import 'package:seller_side/models/user.dart';
 import 'package:seller_side/provider/local_provider.dart';
+import 'package:seller_side/setting/privacy.dart';
+import 'package:seller_side/setting/support.dart';
+import 'package:seller_side/setting/terms.dart';
 import 'package:seller_side/widgets/app_button.dart';
 import 'package:seller_side/widgets/loader.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -181,7 +181,14 @@ class _SettingScreenState extends State<SettingScreen> {
                                         title: Text(AppLocalizations.of(context)!
                                             .privacy), //const Text('Privacy'),
                                         trailing: IconButton(
-                                            onPressed: () {}, icon: const Icon(Icons.arrow_forward)),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          PrivacyPolicy(user: widget.userData)));
+                                            },
+                                            icon: const Icon(Icons.arrow_forward)),
                                       ),
                                       ListTile(
                                         leading: CircleAvatar(
@@ -192,7 +199,14 @@ class _SettingScreenState extends State<SettingScreen> {
                                         title: Text(AppLocalizations.of(context)!
                                             .termsConditions), //const Text('Terms & Conditions'),
                                         trailing: IconButton(
-                                            onPressed: () {}, icon: const Icon(Icons.arrow_forward)),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          TermsConditions(user: widget.userData)));
+                                            },
+                                            icon: const Icon(Icons.arrow_forward)),
                                       ),
                                       ListTile(
                                         leading: CircleAvatar(
@@ -214,7 +228,14 @@ class _SettingScreenState extends State<SettingScreen> {
                                         title: Text(AppLocalizations.of(context)!
                                             .support), //const Text('Support'),
                                         trailing: IconButton(
-                                            onPressed: () {}, icon: const Icon(Icons.arrow_forward)),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Support(user: widget.userData)));
+                                            },
+                                            icon: const Icon(Icons.arrow_forward)),
                                       ),
                                       ListTile(
                                         leading: CircleAvatar(

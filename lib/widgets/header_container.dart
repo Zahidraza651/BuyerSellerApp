@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class AppHeader extends StatelessWidget {
   final bool visible;
   final String? text;
+  final Function? dothis;
 
   const AppHeader({
     Key? key,
     required this.visible,
     this.text,
+    this.dothis,
   }) : super(key: key);
 
   @override
@@ -31,9 +33,7 @@ class AppHeader extends StatelessWidget {
                 child: Visibility(
                     visible: visible,
                     child: IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
+                      onPressed: dothis as void Function()?,
                       icon: const Icon(
                         Icons.arrow_back,
                         color: Colors.white,

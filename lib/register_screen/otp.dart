@@ -3,6 +3,7 @@ import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_side/constants.dart';
 import 'package:seller_side/register_screen/register_data.dart';
+import 'package:seller_side/register_screen/registration.dart';
 import 'package:seller_side/widgets/app_textfield.dart';
 import 'package:seller_side/widgets/header_container.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
@@ -83,6 +84,10 @@ class _OTPState extends State<OTP> {
             AppHeader(
               visible: true,
               text: AppLocalizations.of(context)!.oTP, //'OTP',
+              dothis: () {
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (context) => const Registration()));
+              },
             ),
             const SizedBox(
               height: 30.0,

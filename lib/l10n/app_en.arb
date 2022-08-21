@@ -108,6 +108,8 @@
       "newconfirmpass" : "Provide New & confirm password",
       "passnotmatch" : "New & Confirm password didnot match",
       "providevalidemail" : "Provide a valid email",
-      "reqcompleted" : "Request already Accepted"
+      "reqcompleted" : "Request already Accepted",
+      "privacyPolicy": "Privacy Policy"
+      
 
 }

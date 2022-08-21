@@ -297,7 +297,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: const TextStyle(color: Colors.blue),
                             ),
                             onTap: () {
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                   context, MaterialPageRoute(builder: (context) => ForgotPassword()));
                             },
                           ),

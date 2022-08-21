@@ -1,9 +1,10 @@
 import 'dart:convert';
-
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 import 'package:seller_side/constants.dart';
 import 'package:seller_side/forgot%20password/resetpassword.dart';
+import 'package:seller_side/login_screen/login.dart';
 import 'package:seller_side/widgets/app_textfield.dart';
 import '../widgets/app_button.dart';
 import '../widgets/header_container.dart';
@@ -66,10 +67,20 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: SingleChildScrollView(
+          body: DoubleBackToCloseApp(
+        snackBar: SnackBar(
+          content: Text(AppLocalizations.of(context)!.backagaintoexit),
+        ),
+        child: SingleChildScrollView(
           child: Column(
             children: [
-              AppHeader(visible: true, text: AppLocalizations.of(context)!.forgotpassword),
+              AppHeader(
+                  visible: true,
+                  text: AppLocalizations.of(context)!.forgotpassword,
+                  dothis: () {
+                    Navigator.pushReplacement(
+                        context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+                  }),
               const SizedBox(
                 height: 30.0,
               ),
@@ -252,7 +263,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             ],
           ),
         ),
-      ),
+      )),
     );
   }
 

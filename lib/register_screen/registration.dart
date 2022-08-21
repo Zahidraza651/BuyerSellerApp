@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:seller_side/constants.dart';
+import 'package:seller_side/login_screen/login.dart';
 
 import 'package:seller_side/register_screen/otp.dart';
 import 'package:seller_side/widgets/header_container.dart';
@@ -63,7 +64,14 @@ class _RegistrationState extends State<Registration> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            AppHeader(visible: true, text: AppLocalizations.of(context)!.register),
+            AppHeader(
+              visible: true,
+              text: AppLocalizations.of(context)!.register,
+              dothis: () {
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+              },
+            ),
             const SizedBox(
               height: 30.0,
             ),
