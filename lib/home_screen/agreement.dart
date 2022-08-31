@@ -160,6 +160,9 @@ class _AgreementState extends State<Agreement> {
                                     child: DropdownButtonFormField(
                                       decoration: InputDecoration(
                                           fillColor: Colors.grey[500],
+                                          border: InputBorder.none,
+                                          focusedBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(30.0)),
                                           enabledBorder: OutlineInputBorder(
                                               borderRadius: BorderRadius.circular(30.0))),
                                       isExpanded: true,
